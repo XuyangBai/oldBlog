@@ -1,0 +1,995 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="FiMjXG2hlK45XpsTjLkdxV_OH-q24f7Me-GUONpXIV0" />
+
+
+
+
+
+
+
+
+<script>
+	(function(){
+		if(''){
+			if(prompt('请输入文章密码') !== ''){
+				alert("密码错误!");
+				history.back();
+			}
+		}
+	})();
+</script>
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,Bluetooth," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Android与HC05蓝牙模块连接 因为我们的项目最终更是要用手机和MT7697用蓝牙连接，鉴于假期手边没有MT7697，就先用arduino来尝试Android和HC-05模块的连接。">
+<meta name="keywords" content="Android,Bluetooth">
+<meta property="og:type" content="article">
+<meta property="og:title" content="蓝牙模块(四)-Android与HC05蓝牙模块连接">
+<meta property="og:url" content="http://yoursite.com/2017/02/07/Android/安卓开发-蓝牙模块(四)Android与HC-05蓝牙模块连接/index.html">
+<meta property="og:site_name" content="Xuyang">
+<meta property="og:description" content="Android与HC05蓝牙模块连接 因为我们的项目最终更是要用手机和MT7697用蓝牙连接，鉴于假期手边没有MT7697，就先用arduino来尝试Android和HC-05模块的连接。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/Android/serial.png">
+<meta property="og:updated_time" content="2017-05-05T16:52:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="蓝牙模块(四)-Android与HC05蓝牙模块连接">
+<meta name="twitter:description" content="Android与HC05蓝牙模块连接 因为我们的项目最终更是要用手机和MT7697用蓝牙连接，鉴于假期手边没有MT7697，就先用arduino来尝试Android和HC-05模块的连接。">
+<meta name="twitter:image" content="http://yoursite.com/images/Android/serial.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"always"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/02/07/Android/安卓开发-蓝牙模块(四)Android与HC-05蓝牙模块连接/"/>
+
+
+
+
+
+  <title> 蓝牙模块(四)-Android与HC05蓝牙模块连接 | Xuyang </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Xuyang</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">读书，交友，爱，思考</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup">
+ <span class="search-icon fa fa-search"></span>
+ <input type="text" id="local-search-input">
+ <div id="local-search-result"></div>
+ <span class="popup-btn-close">close</span>
+</div>
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/07/Android/安卓开发-蓝牙模块(四)Android与HC-05蓝牙模块连接/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="XuyangBai">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/mine.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Xuyang">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Xuyang" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                蓝牙模块(四)-Android与HC05蓝牙模块连接
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-07T22:09:29+08:00">
+                2017-02-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/开发笔记/" itemprop="url" rel="index">
+                    <span itemprop="name">开发笔记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Android与HC05蓝牙模块连接"><a href="#Android与HC05蓝牙模块连接" class="headerlink" title="Android与HC05蓝牙模块连接"></a>Android与HC05蓝牙模块连接</h2><p> 因为我们的项目最终更是要用手机和MT7697用蓝牙连接，鉴于假期手边没有MT7697，就先用arduino来尝试Android和HC-05模块的连接。</p>
+<a id="more"></a>
+<p>买的HC-05模块是因为这个蓝牙模块既可以做主机又可以做从机。目前在市场上hc-05模块有两种一种是有EN脚，另一种是KEY脚, 他们之间的差别在于进入AT模式的方法。</p>
+<p>我买的是带EN脚的，它进入AT模式的方式是<strong>按住按钮，将EN脚置3.3V，上电</strong></p>
+<p>模块状态：</p>
+<ul>
+<li>快闪：正常模式</li>
+<li>慢闪 ，闪2s停2s：AT模式</li>
+<li>每2s闪烁两下：已经连接</li>
+</ul>
+<h2 id="使用Arduino配置蓝牙AT指令"><a href="#使用Arduino配置蓝牙AT指令" class="headerlink" title="使用Arduino配置蓝牙AT指令"></a>使用Arduino配置蓝牙AT指令</h2><p>###步骤1 给Arduino下载程序</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LED 13</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">       pinMode(LED,OUTPUT);</span><br><span class="line">       Serial.begin(<span class="number">38400</span>);<span class="comment">//这里应该和你的模块通信波特率一致</span></span><br><span class="line">       delay(<span class="number">100</span>);</span><br><span class="line">       Serial.println(<span class="string">"AT"</span>);</span><br><span class="line">       delay(<span class="number">100</span>);</span><br><span class="line">       Serial.println(<span class="string">"AT+NAME=HC05-Bluetooth"</span>);<span class="comment">//命名模块名</span></span><br><span class="line">       delay(<span class="number">100</span>);</span><br><span class="line">       Serial.println(<span class="string">"AT+ROLE=0"</span>);<span class="comment">//设置主从模式：0从机，1主机</span></span><br><span class="line">       delay(<span class="number">100</span>);</span><br><span class="line">       Serial.println(<span class="string">"AT+PSWD=1111"</span>);<span class="comment">//设置配对密码，如1234</span></span><br><span class="line">       delay(<span class="number">100</span>);</span><br><span class="line">       Serial.println(<span class="string">"AT+UART=9600,0,0"</span>);<span class="comment">//设置波特率9600，停止位1，校验位无</span></span><br><span class="line">       delay(<span class="number">100</span>);</span><br><span class="line">       Serial.println(<span class="string">"AT+RMAAD"</span>);<span class="comment">//清空配对列表</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">       digitalWrite(LED, HIGH);</span><br><span class="line">       delay(<span class="number">500</span>);</span><br><span class="line">       digitalWrite(LED, LOW);</span><br><span class="line">       delay(<span class="number">500</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>###步骤2 连线：</p>
+<p> RXD-TX TXD-RX VCC-VCC GND-GND <strong>EN连3.3V</strong></p>
+<h3 id="步骤3："><a href="#步骤3：" class="headerlink" title="步骤3："></a>步骤3：</h3><p>按下HC-05上的按键，再给Arduino上电，让程序开始运行一次，当发现LED灯500ms闪烁时表明已经设置成功，再用手机连蓝牙模块时候会发现蓝牙名字变成了HC05-Bluetooth,需要用1111作为配对密码</p>
+<h2 id="用arduino给配置蓝牙AT指令（二）"><a href="#用arduino给配置蓝牙AT指令（二）" class="headerlink" title="用arduino给配置蓝牙AT指令（二）"></a>用arduino给配置蓝牙AT指令（二）</h2><p>再网上看到一个更方便的用arduino配置蓝牙指令的方法</p>
+<h3 id="步骤1-下载程序"><a href="#步骤1-下载程序" class="headerlink" title="步骤1 下载程序"></a>步骤1 下载程序</h3><h3 id="后来发现甚至直接烧录一个空的程序进去-RX接RX-amp-TX接TX，不影响进入AT模式，且也可以在串口上正常显示结果"><a href="#后来发现甚至直接烧录一个空的程序进去-RX接RX-amp-TX接TX，不影响进入AT模式，且也可以在串口上正常显示结果" class="headerlink" title="(后来发现甚至直接烧录一个空的程序进去,RX接RX  &amp; TX接TX，不影响进入AT模式，且也可以在串口上正常显示结果)"></a>(后来发现甚至直接烧录一个空的程序进去,RX接RX  &amp; TX接TX，不影响进入AT模式，且也可以在串口上正常显示结果)</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  by Brandon Plumbo AKA Riftliger</span></span><br><span class="line"><span class="comment">//  original version from Martyn Currey http://www.martyncurrey.com/</span></span><br><span class="line"><span class="comment">//  HC-05 universal test sketch to enter AT-commands</span></span><br><span class="line"><span class="comment">//  Uses hardware serial to talk to the host computer and software serial for communication with the bluetooth module</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  Pins</span></span><br><span class="line"><span class="comment">//  BT VCC to Arduino 5V out.</span></span><br><span class="line"><span class="comment">//  BT GND to GND</span></span><br><span class="line"><span class="comment">//  Arduino D11 to BT RX</span></span><br><span class="line"><span class="comment">//  Arduino D10 BT TX</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  When a command is entered in the serial monitor on the computer</span></span><br><span class="line"><span class="comment">//  the Arduino will relay it to the bluetooth module and display the result.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="comment">//  The HC-05 modules require both CR and NL</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;SoftwareSerial.h&gt;</span></span></span><br><span class="line"><span class="function">SoftwareSerial <span class="title">BTSerial</span><span class="params">(<span class="number">10</span>, <span class="number">11</span>)</span></span>; <span class="comment">//  TX,RX</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> c = <span class="string">' '</span>;</span><br><span class="line">boolean NL = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">  Serial.begin(<span class="number">9600</span>);</span><br><span class="line">  Serial.println(<span class="string">"Sketch HC-05"</span>);</span><br><span class="line">  Serial.println(<span class="string">"Arduino with HC-05 is ready"</span>);</span><br><span class="line">  Serial.println(<span class="string">"Make sure Both NL &amp; CR are set"</span>);</span><br><span class="line">  Serial.println(<span class="string">""</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">//Set to HC-05 default baud rate, found using AT+UART.  It is usually 38400.</span></span><br><span class="line">  BTSerial.begin(<span class="number">38400</span>);</span><br><span class="line">  Serial.println(<span class="string">"BTserial started at 38400"</span>);</span><br><span class="line">  Serial.println(<span class="string">""</span>);</span><br><span class="line">  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Read from the Bluetooth module and send to the Arduino Serial Monitor</span></span><br><span class="line">  <span class="keyword">if</span> (BTSerial.available())</span><br><span class="line">  &#123;</span><br><span class="line">    c = BTSerial.read();</span><br><span class="line">    Serial.write(c);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Read from the Serial Monitor and send to the Bluetooth module</span></span><br><span class="line">  <span class="keyword">if</span> (Serial.available())</span><br><span class="line">  &#123;</span><br><span class="line">    c = Serial.read();</span><br><span class="line">    BTSerial.write(c);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Echo the user input to the main window. The "&gt;" character indicates the user entered text.</span></span><br><span class="line">    <span class="keyword">if</span> (NL) &#123;</span><br><span class="line">      Serial.print(<span class="string">"&gt;"</span>);</span><br><span class="line">      NL = <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    Serial.write(c);</span><br><span class="line">    <span class="keyword">if</span> (c == <span class="number">10</span>) &#123;</span><br><span class="line">      NL = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中SoftwareSerial库的作用：</p>
+<p>先用的Arduino支持引脚0和1进行串行通信，而现有的SoftwareSerial库允许其他数字引脚进行串行通信</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">SoftwareSerial <span class="title">mySerial</span><span class="params">(<span class="number">2</span>, <span class="number">3</span>)</span></span>; </span><br><span class="line"><span class="comment">//  RX是数字引脚2（连接到其他设备的TX） </span></span><br><span class="line"><span class="comment">//  TX是数字引脚3（连接到其他设备的RX）</span></span><br></pre></td></tr></table></figure>
+<h3 id="步骤2-连线"><a href="#步骤2-连线" class="headerlink" title="步骤2 连线"></a>步骤2 连线</h3><p><strong>RXD-11 TXD-10</strong> VCC-VCC GND-GND EN连3.3V</p>
+<h3 id="步骤3"><a href="#步骤3" class="headerlink" title="步骤3"></a>步骤3</h3><p>按下HC-05上的按键，再给Arduino上电。然后打开arduino的IDE内置的串口工具，输入AT发现返回OK，即可以在命令窗口进行AT设置</p>
+<p><img src="/images/Android/serial.png" alt=""></p>
+<p>常用的AT指令：</p>
+<table>
+<thead>
+<tr>
+<th>AT+UART</th>
+<th>设置串口参数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AT+PSWD</td>
+<td>设置配对码</td>
+</tr>
+<tr>
+<td>AT+ROLE</td>
+<td>设置模块角色 0 从角色，1 主角色，2 回环角色</td>
+</tr>
+<tr>
+<td>AT+CMODE=&lt;模式&gt;</td>
+<td>0–指定蓝牙地址连接模式</td>
+</tr>
+<tr>
+<td></td>
+<td>1–任意蓝牙地址连接模式</td>
+</tr>
+<tr>
+<td></td>
+<td>2–回环角色（Slave-Loop）</td>
+</tr>
+<tr>
+<td>AT+BIND=&lt;绑定蓝牙地址&gt;</td>
+<td>绑定蓝牙地址（只在指定蓝牙地址模式有效）</td>
+</tr>
+<tr>
+<td>AT+PAIR=&lt;远程设备地址&gt;&lt;连接超时&gt;</td>
+<td>设备配对</td>
+</tr>
+</tbody>
+</table>
+<h2 id="用USB-to-UART模块设置蓝牙"><a href="#用USB-to-UART模块设置蓝牙" class="headerlink" title="用USB to UART模块设置蓝牙"></a>用USB to UART模块设置蓝牙</h2><p>需要有与USB转串口模块和串口调试助手</p>
+<p>设置好AT模式之后，将HC05调成从机模式，设置蓝牙连接模式为指定地址连接模式，并绑定手机地址，和手机进行通信</p>
+<hr>
+<h2 id="手机与蓝牙模块的连接"><a href="#手机与蓝牙模块的连接" class="headerlink" title="手机与蓝牙模块的连接"></a>手机与蓝牙模块的连接</h2><p>首先按上述方法二进入AT模式，将蓝牙模块设置成slave(AT+ROLE),连接模式设为指定地址连接(AT+CMODE),再绑定手机的MAC地址(AT+BIND)，然后要记得把<strong>EN接地</strong></p>
+<p>给arduino写入实验代码，蓝牙控制arduino上的灯 如果接受到1就亮，2就不亮</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setup</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  Serial.begin(<span class="number">38400</span>); <span class="comment">//一定不要忘掉是38400！！！</span></span><br><span class="line">  pinMode(<span class="number">13</span>,OUTPUT);</span><br><span class="line">  Serial.println(<span class="string">"Program start..."</span>);  </span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">loop</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">while</span>(Serial.available()&gt;<span class="number">0</span>)&#123;</span><br><span class="line">   <span class="keyword">char</span> c= Serial.read();</span><br><span class="line">   <span class="keyword">if</span>(c==<span class="string">'1'</span>)</span><br><span class="line">     &#123;</span><br><span class="line">       Serial.println(<span class="string">"Get 1"</span>);</span><br><span class="line">       Serial.write(<span class="string">"Serial--13--HIGH"</span>);</span><br><span class="line">       digitalWrite(<span class="number">13</span>,HIGH);</span><br><span class="line">     &#125;</span><br><span class="line">     <span class="keyword">if</span>(c==<span class="string">'2'</span>)</span><br><span class="line">     &#123;</span><br><span class="line">       Serial.println(<span class="string">"Get 2"</span>);</span><br><span class="line">       Serial.write(<span class="string">"Serial--13--LOW"</span>);</span><br><span class="line">       digitalWrite(<span class="number">13</span>,LOW);</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>Serial.print</code>发送的是字符，如果你发送97，发过去的其实是9的ascii码(00111001)和7的ascii码(00110111)</p>
+<p><code>Serial.write</code> 发送的是字节，是一个0-255的数字，如果你发97， 发过去的其实是97的二进制(01100001)，对应ascii表中的“a”.</p>
+<p>首先尝试用蓝牙串口助手和蓝牙相连是可以正常通信的，再换之前的蓝牙demo。</p>
+<blockquote>
+<p>用之前的Demo一直无法连接，后来上网查到对串口操作的UUID是00001101-0000-1000-8000-00805F9B34FB，这样程序就能跑通了</p>
+</blockquote>
+<hr>
+<h2 id="背景知识-UART"><a href="#背景知识-UART" class="headerlink" title="背景知识:UART"></a>背景知识:UART</h2><h3 id="什么是UART"><a href="#什么是UART" class="headerlink" title="什么是UART:"></a>什么是UART:</h3><p>​    通用异步收发传输器（Universal Asynchronous Receiver/Transmitter)，通常称作UART，是一种异步收发传输器，是电脑硬件的一部分。将资料由<a href="http://baike.baidu.com/view/716175.htm" target="_blank" rel="noopener">串行通信</a>与<a href="http://baike.baidu.com/view/716178.htm" target="_blank" rel="noopener">并行通信</a>间作传输转换，作为并行输入成为串行输出的芯片，通常集成于其他通讯接口的连结上。</p>
+<h3 id="通信协议："><a href="#通信协议：" class="headerlink" title="通信协议："></a>通信协议：</h3><p>​    UART作为异步<a href="http://baike.baidu.com/view/2459734.htm" target="_blank" rel="noopener">串口通信协议</a>的一种，工作原理是将传输数据的每个字符一位接一位地传输，其中各位意义如下：</p>
+<ul>
+<li>起始位：先发出一个逻辑”0”的信号，表示传输字符的开始</li>
+<li>资料位：紧接着起始位之后。资料位的个数可以是4、5、6、7、8等，构成一个字符。通常采用ASCII码。从最低位开始传送，靠时钟定位。</li>
+<li><a href="http://baike.baidu.com/view/492663.htm" target="_blank" rel="noopener">奇偶校验位</a>：资料位加上这一位后，使得“1”的位数应为偶数(偶校验)或奇数(奇校验)，以此来校验资料传送的正确性。</li>
+<li>停止位：它是一个字符数据的结束标志。</li>
+<li>空闲位：处于逻辑“1”状态，表示当前线路上没有资料传送。</li>
+<li><a href="http://baike.baidu.com/view/543280.htm" target="_blank" rel="noopener">波特</a>率：是衡量资料传送速率的指标。表示每秒钟传送的符号数（symbol）。一个符号代表的信息量（比特数）与符号的阶数有关。例如资料传送速率为120字符/秒，传输使用256阶符号，每个符号代表8bit，则波特率就是120baud，比特率是120*8=960bit/s。这两者的概念很容易搞错。</li>
+</ul>
+<p><a href="https://github.com/XuyangBai/Bluetooth" target="_blank" rel="noopener">Arduino_BT_Android</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"># Android</a>
+          
+            <a href="/tags/Bluetooth/" rel="tag"># Bluetooth</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/06/Servlet&JSP简介/" rel="next" title="Servlet & JSP简介">
+                <i class="fa fa-chevron-left"></i> Servlet & JSP简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/08/Android/安卓开发-蓝牙模块(五)低功耗蓝牙BLE-part1/" rel="prev" title="蓝牙模块(五)低功耗蓝牙BLE-part1">
+                蓝牙模块(五)低功耗蓝牙BLE-part1 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/mine.jpg"
+               alt="XuyangBai" />
+          <p class="site-author-name" itemprop="name">XuyangBai</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">32</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/XuyangBai" target="_blank" title="Github">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/%E6%97%AD%E9%98%B3-%E7%99%BD-419369140/" target="_blank" title="Linkedin">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  Linkedin
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Android与HC05蓝牙模块连接"><span class="nav-number">1.</span> <span class="nav-text">Android与HC05蓝牙模块连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Arduino配置蓝牙AT指令"><span class="nav-number">2.</span> <span class="nav-text">使用Arduino配置蓝牙AT指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤3："><span class="nav-number">2.1.</span> <span class="nav-text">步骤3：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用arduino给配置蓝牙AT指令（二）"><span class="nav-number">3.</span> <span class="nav-text">用arduino给配置蓝牙AT指令（二）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤1-下载程序"><span class="nav-number">3.1.</span> <span class="nav-text">步骤1 下载程序</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#后来发现甚至直接烧录一个空的程序进去-RX接RX-amp-TX接TX，不影响进入AT模式，且也可以在串口上正常显示结果"><span class="nav-number">3.2.</span> <span class="nav-text">(后来发现甚至直接烧录一个空的程序进去,RX接RX  & TX接TX，不影响进入AT模式，且也可以在串口上正常显示结果)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤2-连线"><span class="nav-number">3.3.</span> <span class="nav-text">步骤2 连线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤3"><span class="nav-number">3.4.</span> <span class="nav-text">步骤3</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用USB-to-UART模块设置蓝牙"><span class="nav-number">4.</span> <span class="nav-text">用USB to UART模块设置蓝牙</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手机与蓝牙模块的连接"><span class="nav-number">5.</span> <span class="nav-text">手机与蓝牙模块的连接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#背景知识-UART"><span class="nav-number">6.</span> <span class="nav-text">背景知识:UART</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是UART"><span class="nav-number">6.1.</span> <span class="nav-text">什么是UART:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通信协议："><span class="nav-number">6.2.</span> <span class="nav-text">通信协议：</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XuyangBai</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+ 
+  <!-- 页面点击小红心-->
+  <script type="type/javascript" src="/js/src/love.js"></script>  
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid="></script>
+      <!-- UY END -->
+  
+
+
+
+
+  
+  
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length == 0) {
+      search_path = "search.xml";
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    function proceedsearch() {
+      $("body").append('<div class="popoverlay">').css('overflow', 'hidden');
+      $('.popup').toggle();
+    }
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+      $.ajax({
+        url: path,
+        dataType: "xml",
+        async: true,
+        success: function( xmlResponse ) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = $( "entry", xmlResponse ).map(function() {
+            return {
+              title: $( "title", this ).text(),
+              content: $("content",this).text(),
+              url: $( "url" , this).text()
+            };
+          }).get();
+          var $input = document.getElementById(search_id);
+          var $resultContent = document.getElementById(content_id);
+          $input.addEventListener('input', function(){
+            var matchcounts = 0;
+            var str='<ul class=\"search-result-list\">';
+            var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+            $resultContent.innerHTML = "";
+            if (this.value.trim().length > 1) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var content_index = [];
+                var data_title = data.title.trim().toLowerCase();
+                var data_content = data.content.trim().replace(/<[^>]+>/g,"").toLowerCase();
+                var data_url = decodeURIComponent(data.url);
+                var index_title = -1;
+                var index_content = -1;
+                var first_occur = -1;
+                // only match artiles with not empty titles and contents
+                if(data_title != '') {
+                  keywords.forEach(function(keyword, i) {
+                    index_title = data_title.indexOf(keyword);
+                    index_content = data_content.indexOf(keyword);
+                    if( index_title >= 0 || index_content >= 0 ){
+                      isMatch = true;
+                      if (i == 0) {
+                        first_occur = index_content;
+                      }
+                    }
+
+                  });
+                }
+                // show search results
+                if (isMatch) {
+                  matchcounts += 1;
+                  str += "<li><a href='"+ data_url +"' class='search-result-title'>"+ data_title +"</a>";
+                  var content = data.content.trim().replace(/<[^>]+>/g,"");
+                  if (first_occur >= 0) {
+                    // cut out 100 characters
+                    var start = first_occur - 20;
+                    var end = first_occur + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if(start == 0){
+                      end = 50;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    var match_content = content.substring(start, end);
+                    // highlight all keywords
+                    keywords.forEach(function(keyword){
+                      var regS = new RegExp(keyword, "gi");
+                      match_content = match_content.replace(regS, "<b class=\"search-keyword\">"+keyword+"</b>");
+                    });
+
+                    str += "<p class=\"search-result\">" + match_content +"...</p>"
+                  }
+                  str += "</li>";
+                }
+              })};
+            str += "</ul>";
+            if (matchcounts == 0) { str = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>' }
+            if (keywords == "") { str = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>' }
+            $resultContent.innerHTML = str;
+          });
+          proceedsearch();
+        }
+      });}
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched == false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(function(e){
+      $('.popup').hide();
+      $(".popoverlay").remove();
+      $('body').css('overflow', '');
+    });
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
