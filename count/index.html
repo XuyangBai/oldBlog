@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="阅读量Top：  AV.initialize(&quot;uFLr001MNa5H9BGnQpg2Oq9p-gzGzoHsz&quot;, &quot;dwYpENeLoJzOf7Xx4pMlY5BE&quot;);     var time=0   var title=&quot;&quot;   var url=&">
+<meta name="description" content="一个人的朝圣路，甘苦自知 阅读量Top：  AV.initialize(&quot;uFLr001MNa5H9BGnQpg2Oq9p-gzGzoHsz&quot;,&quot;dwYpENeLoJzOf7Xx4pMlY5BE&quot;);     var num=10;   var time=0;   var tit">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Xuyang">
 <meta property="og:url" content="http://yoursite.com/count/index.html">
 <meta property="og:site_name" content="Xuyang">
-<meta property="og:description" content="阅读量Top：  AV.initialize(&quot;uFLr001MNa5H9BGnQpg2Oq9p-gzGzoHsz&quot;, &quot;dwYpENeLoJzOf7Xx4pMlY5BE&quot;);     var time=0   var title=&quot;&quot;   var url=&quot;&quot;   var query = new AV.Query(&apos;Counter&apos;);//表名   query.notEqualTo(&apos;id&apos;,0">
+<meta property="og:description" content="一个人的朝圣路，甘苦自知 阅读量Top：  AV.initialize(&quot;uFLr001MNa5H9BGnQpg2Oq9p-gzGzoHsz&quot;,&quot;dwYpENeLoJzOf7Xx4pMlY5BE&quot;);     var num=10;   var time=0;   var title=&quot;&quot;;   var url=&quot;&quot;;   var query = new AV.Query(&apos;Counter&apos;);/">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-18T12:00:48.306Z">
+<meta property="og:updated_time" content="2017-12-18T12:13:49.723Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Xuyang">
-<meta name="twitter:description" content="阅读量Top：  AV.initialize(&quot;uFLr001MNa5H9BGnQpg2Oq9p-gzGzoHsz&quot;, &quot;dwYpENeLoJzOf7Xx4pMlY5BE&quot;);     var time=0   var title=&quot;&quot;   var url=&quot;&quot;   var query = new AV.Query(&apos;Counter&apos;);//表名   query.notEqualTo(&apos;id&apos;,0">
+<meta name="twitter:description" content="一个人的朝圣路，甘苦自知 阅读量Top：  AV.initialize(&quot;uFLr001MNa5H9BGnQpg2Oq9p-gzGzoHsz&quot;,&quot;dwYpENeLoJzOf7Xx4pMlY5BE&quot;);     var num=10;   var time=0;   var title=&quot;&quot;;   var url=&quot;&quot;;   var query = new AV.Query(&apos;Counter&apos;);/">
 
 
 
@@ -277,26 +277,29 @@
       <div class="post-body">
         
         
-          <p></p><p id="heheda"><font size="4">阅读量Top：<br><br></font></p><p></p>
+          <p><blockquote class="blockquote-center">一个人的朝圣路，甘苦自知</blockquote></p>
+<p></p><p id="heheda"><font size="4">阅读量Top：<br><br></font></p><p></p>
 <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-<script>AV.initialize("uFLr001MNa5H9BGnQpg2Oq9p-gzGzoHsz", "dwYpENeLoJzOf7Xx4pMlY5BE");</script> 
+<script>AV.initialize("uFLr001MNa5H9BGnQpg2Oq9p-gzGzoHsz","dwYpENeLoJzOf7Xx4pMlY5BE");</script> 
 <script type="text/javascript">
-  var time=0
-  var title=""
-  var url=""
+  var num=10;
+  var time=0;
+  var title="";
+  var url="";
   var query = new AV.Query('Counter');//表名
   query.notEqualTo('id',0); //id不为0的结果
   query.descending('time'); //结果按阅读次数降序排序
-  query.limit(20);  //最终只返回10条结果
+  query.limit(num);  //最终只返回10条结果
   query.find().then(function (todo) {
     for (var i=0;i<10;i++){ 
+      console.log(todo[i]);
       var result=todo[i].attributes;
       time=result.time;  //阅读次数
       title=result.title; //文章标题
       url=result.url;     //文章url
       var content="<p>"+"<font color='#0477ab'>"+"【阅读次数:"+time+"】"+"<a href='"+"http://thief.one"+url+"'>"+title+"</font>"+"</a>"+"</p>";
-      document.write("<a href='"+"http://xuyangbai.github.io/"+url+"'>"+title+"</a>"+"    Readtimes:"+time+"<br>");
-      document.getElementById("heheda").innerHTML+=content
+      //  document.write("<a href='"+"http://xuyangbai.github.io/"+url+"'>"+title+"</a>"+"    Readtimes:"+time+"<br>");
+      document.getElementById("heheda").innerHTML+=content;
     }
   }, function (error) {
     console.log("error");
