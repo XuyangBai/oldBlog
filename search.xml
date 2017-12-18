@@ -3,7 +3,7 @@
   
     
     <entry>
-      <title><![CDATA[Python深拷贝浅拷贝]]></title>
+      <title><![CDATA[Python多线程 & 多进程]]></title>
       <url>/2017/12/18/Python/Python%E5%A4%9A%E7%BA%BF%E7%A8%8B_&amp;_%E5%A4%9A%E8%BF%9B%E7%A8%8B/</url>
       <content type="html"><![CDATA[<h1 id="Python多线程-多进程-amp-协程"><a href="#Python多线程-多进程-amp-协程" class="headerlink" title="Python多线程 多进程 &amp; 协程"></a>Python多线程 多进程 &amp; 协程</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><h3 id="进程（process）-程序是指令、数据及其组织形式的描述，进程是程序的真正运行实例。包含：（程序的可执行机器码、内存、资源的操作系统描述符、安全特性、处理器状态）等。"><a href="#进程（process）-程序是指令、数据及其组织形式的描述，进程是程序的真正运行实例。包含：（程序的可执行机器码、内存、资源的操作系统描述符、安全特性、处理器状态）等。" class="headerlink" title="进程（process）:  程序是指令、数据及其组织形式的描述，进程是程序的真正运行实例。包含：（程序的可执行机器码、内存、资源的操作系统描述符、安全特性、处理器状态）等。"></a>进程（process）:  程序是指令、数据及其组织形式的描述，进程是程序的真正运行实例。包含：（程序的可执行机器码、内存、资源的操作系统描述符、安全特性、处理器状态）等。</h3><blockquote>
 <p>Each process provides the resources needed to execute a program. A process has a virtual address space, executable code, open handles to system objects, a security context, a unique process identifier, environment variables, a priority class, minimum and maximum working set sizes, and at least one thread of execution. Each process is started with a single thread, often called the primary thread, but can create additional threads from any of its threads.</p>
