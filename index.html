@@ -447,6 +447,183 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/19/CSAPP/Data_Lab/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XuyangBai">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/mine.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xuyang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/01/19/CSAPP/Data_Lab/" itemprop="url">CSAPP-Data Lab</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-19T22:59:35+08:00">
+                2018-01-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/厚积薄发/" itemprop="url" rel="index">
+                    <span itemprop="name">厚积薄发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/01/19/CSAPP/Data_Lab/" class="leancloud_visitors" data-flag-title="CSAPP-Data Lab">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+		 <span>°C</span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,257
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Data-Lab-Manipulating-Bits"><a href="#Data-Lab-Manipulating-Bits" class="headerlink" title="Data Lab: Manipulating Bits"></a>Data Lab: Manipulating Bits</h1><p>第一个实验主要分为三个部分，比特操作、整数运算、浮点数运算。 第一个实验就给我来了个下马威，前后花了快两天才把这些都做出来，CMU果然名不虚传啊</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/01/19/CSAPP/Data_Lab/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/14/LeetCode/LintCode-subsets/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -882,56 +1059,14 @@
 
       
         
-          
-            <h1 id="ssh原理与应用"><a href="#ssh原理与应用" class="headerlink" title="ssh原理与应用"></a>ssh原理与应用</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="What-什么是ssh"><a href="#What-什么是ssh" class="headerlink" title="What 什么是ssh"></a>What 什么是ssh</h3><p>Secure Shell(SSH) is a cryptographic network protocal for operating network services securely over an unsecured network. The best known example application is for remote login to computer system by users.</p>
-<h2 id="ssh远程登录"><a href="#ssh远程登录" class="headerlink" title="ssh远程登录"></a>ssh远程登录</h2><p>在客户端来看，SSH提供两种级别的安全验证</p>
-<h3 id="口令登录"><a href="#口令登录" class="headerlink" title="口令登录"></a>口令登录</h3><p>基于账号密码的登录方式。client想要登陆时，server会把自己的公钥发给client, 然后client用这个公钥加密自己的账号和密码发回给server，server再用自己的密钥去解开这个账号密码判断是否正确。但是这个过程中有可能会由别的服务器冒充真正想要访问的服务器，将伪造的公钥发给用户（因为SSH协议的公钥是没有证书中心CA公正的，所以用户难以判别真伪），然后便可以截获用户的账号密码，即中间人攻击。 所以当采用口令登录的时候，第一次尝试登录时会提示<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">The authenticity of host 'host (12.18.429.21)' can't be established.</span><br><span class="line">RSA key fingerprint is 8:2e:d7:e0:de:9f:ac:67:28:c2:42:2d:37:16:58:4d.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)?</span><br></pre></td></tr></table></figure></p>
-<p>意思是无法确保该host主机的真实性，需要用户自己判断是不是真正的远程主机。如果你同意了（如果是假冒的主机，那你就受到了中间人的青睐），会提示</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Warning: Permanently added <span class="string">'host,12.18.429.21'</span> (RSA) to the list of known hosts.</span><br><span class="line">git@&lt;server_ip&gt;<span class="string">'s password:</span></span><br></pre></td></tr></table></figure>
-<p>之后会要求输入账号密码来登录。然后你可以在client本地的.ssh文件夹中看到known_hosts这个文件，其中存放了所有被接受的远程主机的公钥，下次再连接这台主机，系统就会认出它的公钥已经保存在本地了，从而跳过警告部分，直接提示输入密码。</p>
-<h3 id="公钥登录"><a href="#公钥登录" class="headerlink" title="公钥登录"></a>公钥登录</h3><p>公钥登录方式以<strong>非对称加密</strong>实现身份验证。client需要为自己创建一对公钥&amp;密钥，并将自己的公钥放在server上(<code>.ssh/authorized_keys</code>文件夹下)，而密钥放在自己本地。每次登录时server会向client发送一个随机字符串，client需要用自己的密钥对这个随机字符串进行加密，然后发回给server。 server用公钥解开该密文，如果与原先发送的相匹配，则证明该用户是可信的。可以<strong>直接登录shell，不再要求密码</strong>。 这种方式便无法被中间人攻击，因为server无法获取client的密钥。 这种方式第一次登录适合也会提示<code>The authenticity of host &#39;host (12.18.429.21)&#39; can&#39;t be established.</code> 需要你确认host主机的真实性。但是这种方法不会收到中间人攻击是因为</p>
-<p>对于服务端来说</p>
-<p>第一种方案中主机将自己的公钥发放给相关客户端，客户端在访问主机时使用该主机的公钥来加密数据，主机则使用自己的私钥来解密数据，从而实现主机密钥认证，确保数据的保密性。 在第二张方案中，存在一个密钥认证中心，所有提供服务的主机都将自己的公开密钥提交给认证中心，而作为客户端的主机只需要保存一份认证中心的公开密钥就可以了，这种模式下客户端必须访问认证中心然后才能访问服务器主机。</p>
-<h2 id="ssh应用"><a href="#ssh应用" class="headerlink" title="ssh应用"></a>ssh应用</h2><h3 id="搭建git服务器"><a href="#搭建git服务器" class="headerlink" title="*搭建git服务器"></a>*搭建git服务器</h3><blockquote>
-<p>做了个小实验， 在ubuntu上搭建了一个git服务器，加深对ssh的理解</p>
-</blockquote>
-<p>首先明确几个比较重要的的文件</p>
-<ul>
-<li>authorized_keys: 已经认证的客户端的公钥</li>
-<li>known_host: 已经确保正常、可以安全连接的服务器的公钥</li>
-<li>id_rsa: 公钥</li>
-<li>id_rsa.pub: 私钥</li>
-</ul>
-<p>以下是具体操作步骤</p>
-<ol>
-<li>在服务器（Ubuntu）上安装git</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br></pre></td></tr></table></figure>
-<ol>
-<li>创建一个git用户用来运行git服务</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo adduser git</span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>创建证书登录</p>
-<p>收集需要登录的用户的公钥（<code>id_rsa.pub</code> 可使用ssh-keygen来生成），把公钥导入到/home/git/.ssh/authorized_keys 文件中，如果不存在.ssh文件夹的话需要创建一个</p>
-</li>
-<li><p>初始化git仓库</p>
-<p>选定一个目录作为git仓库 例如在/home/ubuntu下执行</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo git init --bare sample.git</span><br></pre></td></tr></table></figure>
-<p>   Git就会创建一个名为sample.git的文件夹, 也是一个裸仓库，<strong>裸仓库没有工作区</strong>，因为服务器上的Git仓库纯粹是为了共享，所以不让用户直接登录到服务器上去改工作区，并且服务器上的Git仓库通常都以<code>.git</code>结尾。然后，把owner改为<code>git</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R git:git sample.git</span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>禁用shell登录</p>
-<p>处于安全考虑, 创建的git用户不允许登录shell，这可以通过编辑<code>/etc/passwd</code>文件完成。找到类似下面的一行<br><code>git:x:1001:1001:,,,:/home/git:/bin/bash</code> 改为<code>git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell</code><br>这样，<code>git</code>用户可以正常通过ssh使用git，但无法登录shell，因为我们为<code>git</code>用户指定的<code>git-shell</code>每次一登录就自动退出</p>
-</li>
-<li><p>这样就大功告成了，可以在客户端上使用<code>git clone git@server_ip:/home/ubuntu/sample.git</code>操作来克隆代码库（会提示是个空的库），之后就和正常的操作一样啦。 </p>
-</li>
-</ol>
-<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.ssh.com/attack/man-in-the-middle" target="_blank" rel="noopener">https://www.ssh.com/attack/man-in-the-middle</a><br><a href="http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html</a></p>
-
-          
+          <h1 id="ssh原理与应用"><a href="#ssh原理与应用" class="headerlink" title="ssh原理与应用"></a>ssh原理与应用</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="What-什么是ssh"><a href="#What-什么是ssh" class="headerlink" title="What 什么是ssh"></a>What 什么是ssh</h3><p>Secure Shell(SSH) is a cryptographic network protocal for operating network services securely over an unsecured network. The best known example application is for remote login to computer system by users.<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/12/22/ssh原理与应用/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1767,161 +1902,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/Life/我的大学/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="XuyangBai">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/mine.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Xuyang">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/06/29/Life/我的大学/" itemprop="url">我的大学</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-29T13:59:35+08:00">
-                2017-06-29
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/06/29/Life/我的大学/" class="leancloud_visitors" data-flag-title="我的大学">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">热度&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-		 <span>°C</span>
-             </span>
-          
-
-          
-
-          
-            <div class="post-wordcount">
-              
-                
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-file-word-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">字数统计&#58;</span>
-                
-                <span title="字数统计">
-                  1,450
-                </span>
-              
-
-              
-
-              
-            </div>
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          The article has been encrypted, please enter your password to view.<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/29/Life/我的大学/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1976,7 +1956,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1998,7 +1978,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

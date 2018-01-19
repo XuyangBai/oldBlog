@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Xuyang">
 <meta property="og:description" content="ssh原理与应用简介What 什么是sshSecure Shell(SSH) is a cryptographic network protocal for operating network services securely over an unsecured network. The best known example application is for remote login to">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-12-23T03:01:34.000Z">
+<meta property="og:updated_time" content="2018-01-19T05:49:32.903Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ssh原理与应用">
 <meta name="twitter:description" content="ssh原理与应用简介What 什么是sshSecure Shell(SSH) is a cryptographic network protocal for operating network services securely over an unsecured network. The best known example application is for remote login to">
@@ -371,7 +371,7 @@
       
 
       
-        <h1 id="ssh原理与应用"><a href="#ssh原理与应用" class="headerlink" title="ssh原理与应用"></a>ssh原理与应用</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="What-什么是ssh"><a href="#What-什么是ssh" class="headerlink" title="What 什么是ssh"></a>What 什么是ssh</h3><p>Secure Shell(SSH) is a cryptographic network protocal for operating network services securely over an unsecured network. The best known example application is for remote login to computer system by users.</p>
+        <h1 id="ssh原理与应用"><a href="#ssh原理与应用" class="headerlink" title="ssh原理与应用"></a>ssh原理与应用</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><h3 id="What-什么是ssh"><a href="#What-什么是ssh" class="headerlink" title="What 什么是ssh"></a>What 什么是ssh</h3><p>Secure Shell(SSH) is a cryptographic network protocal for operating network services securely over an unsecured network. The best known example application is for remote login to computer system by users.<br><a id="more"></a></p>
 <h2 id="ssh远程登录"><a href="#ssh远程登录" class="headerlink" title="ssh远程登录"></a>ssh远程登录</h2><p>在客户端来看，SSH提供两种级别的安全验证</p>
 <h3 id="口令登录"><a href="#口令登录" class="headerlink" title="口令登录"></a>口令登录</h3><p>基于账号密码的登录方式。client想要登陆时，server会把自己的公钥发给client, 然后client用这个公钥加密自己的账号和密码发回给server，server再用自己的密钥去解开这个账号密码判断是否正确。但是这个过程中有可能会由别的服务器冒充真正想要访问的服务器，将伪造的公钥发给用户（因为SSH协议的公钥是没有证书中心CA公正的，所以用户难以判别真伪），然后便可以截获用户的账号密码，即中间人攻击。 所以当采用口令登录的时候，第一次尝试登录时会提示<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">The authenticity of host 'host (12.18.429.21)' can't be established.</span><br><span class="line">RSA key fingerprint is 8:2e:d7:e0:de:9f:ac:67:28:c2:42:2d:37:16:58:4d.</span><br><span class="line">Are you sure you want to continue connecting (yes/no)?</span><br></pre></td></tr></table></figure></p>
 <p>意思是无法确保该host主机的真实性，需要用户自己判断是不是真正的远程主机。如果你同意了（如果是假冒的主机，那你就受到了中间人的青睐），会提示</p>
@@ -539,7 +539,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-count">38</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -561,7 +561,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">24</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
