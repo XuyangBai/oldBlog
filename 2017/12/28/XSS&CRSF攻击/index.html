@@ -90,7 +90,7 @@
 <meta property="og:image" content="https://www.incapsula.com/images/illustrations/web-app-security-mini-site/sorted-XSS.png">
 <meta property="og:image" content="https://hydrasky.com/wp-content/uploads/2016/08/cross_site_request_forger_1.png.jpg">
 <meta property="og:image" content="http://maxprog.net.pl/wp-content/uploads/2016/05/CSRF_UX.png">
-<meta property="og:updated_time" content="2018-01-03T08:05:08.000Z">
+<meta property="og:updated_time" content="2018-03-01T01:21:59.410Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="xss csrf攻击与防御">
 <meta name="twitter:description" content="XSS Cross-site scripting(XSS) is when an attacker can inject scripts into a page sent by your server. Browsers treat these injected scripts like any other script in the page.">
@@ -350,7 +350,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,814
+                  1,811
                 </span>
               
 
@@ -398,12 +398,13 @@
 <li><p>Reflected XSS Attacks<br> Reflected attacks are those where the injected script is reflected off the web server, such as in an error message, search result, or any other response that includes some or all of the input sent to the server as part of the request. Reflected attacks are delivered to victims via another route, such as in an e-mail message, or on some other web site. When a user is tricked into clicking on a malicious link, submitting a specially crafted form, or even just browsing to a malicious site, the injected code travels to the vulnerable web site, which reflects the attack back to the user’s browser. The browser then executes the code because it came from a “trusted” server.<br> 上一个section的例子就属于这种攻击，这中攻击需要黑客把链接挂在别的网站上或者email中诱导别的用户取点击</p>
 </li>
 <li><p>Dom-based XSS Attacks<br> The payload is executed as a result of modifying the DOM environment (in the victim’s browser) used by the original client-side script. That is, the page itself does not change, but the client side code contained in the page runs in an unexpected manner because of the malicious modifications to the DOM environment.<br> e.g.: <a href="https://www.acunetix.com/blog/articles/dom-xss-explained/" target="_blank" rel="noopener">https://www.acunetix.com/blog/articles/dom-xss-explained/</a></p>
-<h2 id="如何避免"><a href="#如何避免" class="headerlink" title="如何避免"></a>如何避免</h2></li>
-<li><p>严格限制用户输入，最好不要让用户输入带标签的内容</p>
 </li>
+</ol>
+<h2 id="如何避免"><a href="#如何避免" class="headerlink" title="如何避免"></a>如何避免</h2><ul>
+<li>严格限制用户输入，最好不要让用户输入带标签的内容</li>
 <li>严格过滤用户的输入，比如使用Python的<code>cgi.escape()</code> 这里escape的意思是转义，比如把<code>&amp; 《 》 &quot; ,</code>分别转移成<code>&amp;amp &amp;lt &amp;gt &amp;quot &amp;#39</code></li>
 <li>限制cookies的过期时间</li>
-</ol>
+</ul>
 <h1 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a>CSRF</h1><blockquote>
 <p>Cross-Site Request Forgery (<strong>CSRF</strong>) is an attack that forces an end user to execute unwanted actions on a web application in which they’re currently authenticated.</p>
 </blockquote>
@@ -558,7 +559,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
