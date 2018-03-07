@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Unicode," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="字符集与编码编码问题一直以来都是很多程序员的噩梦，有时候好不容易写好一个带着详细注释的代码文件，保存一下再打开就发现注释全都乱码了。自己工作的时候还好，摸索一下弄对编码就好了。但是如果是多人协作或者发布产品时，没有统一好编码就会造成很大的问题，特别是对于来自不同国家使用不同语言的工作人员/用户来说。因此，统一编码是非常">
+<meta name="keywords" content="Unicode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="字符集与编码">
+<meta property="og:url" content="http://yoursite.com/2017/05/04/Python/字符集与编码/index.html">
+<meta property="og:site_name" content="Xuyang">
+<meta property="og:description" content="字符集与编码编码问题一直以来都是很多程序员的噩梦，有时候好不容易写好一个带着详细注释的代码文件，保存一下再打开就发现注释全都乱码了。自己工作的时候还好，摸索一下弄对编码就好了。但是如果是多人协作或者发布产品时，没有统一好编码就会造成很大的问题，特别是对于来自不同国家使用不同语言的工作人员/用户来说。因此，统一编码是非常重要的，也就有了Unicode的出现。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-12T12:50:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="字符集与编码">
+<meta name="twitter:description" content="字符集与编码编码问题一直以来都是很多程序员的噩梦，有时候好不容易写好一个带着详细注释的代码文件，保存一下再打开就发现注释全都乱码了。自己工作的时候还好，摸索一下弄对编码就好了。但是如果是多人协作或者发布产品时，没有统一好编码就会造成很大的问题，特别是对于来自不同国家使用不同语言的工作人员/用户来说。因此，统一编码是非常重要的，也就有了Unicode的出现。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/04/Python/字符集与编码/"/>
+
+
+
+
+
+  <title>字符集与编码 | Xuyang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xuyang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">读书，交友，爱，思考</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/04/Python/字符集与编码/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XuyangBai">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/mine.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xuyang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">字符集与编码</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T13:59:35+08:00">
+                2017-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/04/Python/字符集与编码/" class="leancloud_visitors" data-flag-title="字符集与编码">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+		 <span>°C</span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,219
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="字符集与编码"><a href="#字符集与编码" class="headerlink" title="字符集与编码"></a>字符集与编码</h1><p>编码问题一直以来都是很多程序员的噩梦，有时候好不容易写好一个带着详细注释的代码文件，保存一下再打开就发现注释全都乱码了。自己工作的时候还好，摸索一下弄对编码就好了。但是如果是多人协作或者发布产品时，没有统一好编码就会造成很大的问题，特别是对于来自不同国家使用不同语言的工作人员/用户来说。因此，统一编码是非常重要的，也就有了Unicode的出现。</p>
+<a id="more"></a>
+<blockquote>
+<p>这里有几个概念需要先弄清楚</p>
+<p><strong>Unicode是一个字符集，UTF-8是一种字符编码方案，UTF-8是最常使用的一种Unicode的编码方式</strong></p>
+<ol>
+<li>Character repertoire 字符集：一个系统所能支持的所有抽象字符，如ASCII标准的字符集，只包含西文字符和符号；或者Unicode标准的字符集</li>
+<li>Character encoding scheme 字符编码方案：是指字符集和比特流之间的映射关系，给你一个字符如何把它转换成二进制比特流存储在计算机中，Unicode字符集的编码方式有UTF-8 UTF-16等，而ASCII、GB2312这些标准是一个字符集对应一种编码方案，所以通常我们说ASCII的时候既可以只编码，又可以指字符集</li>
+</ol>
+</blockquote>
+<h2 id="为什么要进行编码？"><a href="#为什么要进行编码？" class="headerlink" title="为什么要进行编码？"></a>为什么要进行编码？</h2><p>对于计算机而言，一切信息都是01比特流，不同01组合表示不同的信息；但是01比特流对人来说就不那么友好了，所以如何用<strong>01比特流来表示自然语言</strong>就是编码产生的原因</p>
+<h2 id="ASCII码"><a href="#ASCII码" class="headerlink" title="ASCII码"></a>ASCII码</h2><p>（<strong>American Standard Code for Information Interchange，美国信息互换标准代码</strong>）</p>
+<p>我们知道，在计算机内部，所有的信息最终都表示为一个二进制的字符串。每一个二进制位（bit）有0和1两种状态，因此八个二进制位就可以组合出256种状态，这被称为一个字节（byte）。也就是说，一个字节一共可以用来表示256种不同的状态，每一个状态对应一个符号，就是256个符号，从0000000到11111111。</p>
+<p>上个世纪60年代，美国制定了一套字符编码，对英语字符与二进制位之间的关系，做了统一规定。这被称为ASCII码，一直沿用至今。</p>
+<p>ASCII码一共规定了128个字符的编码，比如空格”SPACE”是32（二进制00100000），大写的字母A是65（二进制01000001）。这128个符号（包括32个不能打印出来的控制符号），只占用了一个字节的后面7位，最前面的1位统一规定为0。</p>
+<h2 id="非ASCII码"><a href="#非ASCII码" class="headerlink" title="非ASCII码"></a>非ASCII码</h2><p>英语用128个符号编码就够了，但是用来表示其他语言，128个符号是不够的。比如，在法语中，字母上方有注音符号，它就无法用ASCII码表示。于是，一些欧洲国家就决定，利用字节中闲置的最高位编入新的符号。比如，法语中的é的编码为130（二进制10000010）。这样一来，这些欧洲国家使用的编码体系，可以表示最多256个符号。</p>
+<p>但是，这里又出现了新的问题。不同的国家有不同的字母，因此，哪怕它们都使用256个符号的编码方式，代表的字母却不一样。比如，130在法语编码中代表了é，在希伯来语编码中却代表了字母Gimel (ג)，在俄语编码中又会代表另一个符号。但是不管怎样，所有这些编码方式中，0–127表示的符号是一样的，不一样的只是128–255的这一段。</p>
+<p>至于亚洲国家的文字，使用的符号就更多了，汉字就多达10万左右。一个字节只能表示256种符号，肯定是不够的，就必须使用多个字节表达一个符号。比如，简体中文常见的编码方式是GB2312，使用两个字节表示一个汉字，所以理论上最多可以表示256x256=65536个符号。</p>
+<p>##Unicode</p>
+<p>正如上一节所说，世界上存在着多种编码方式，同一个二进制数字可以被解释成不同的符号。因此，要想打开一个文本文件，就必须知道它的编码方式，否则用错误的编码方式解读，就会出现乱码。为什么电子邮件常常出现乱码？就是因为发信人和收信人使用的编码方式不一样。</p>
+<p>可以想象，如果有一种编码，将世界上所有的符号都纳入其中。每一个符号都给予一个独一无二的编码，那么乱码问题就会消失。这就是Unicode，就像它的名字都表示的，这是一种所有符号的编码。</p>
+<p>Unicode当然是一个很大的集合，现在的规模可以容纳100多万个符号。每个符号的编码都不一样，比如，U+0639表示阿拉伯字母Ain，U+0041表示英语的大写字母A，U+4E25表示汉字”严”。具体的符号对应表，可以查询<a href="http://www.unicode.org/" target="_blank" rel="noopener">unicode.org</a>，或者专门的<a href="http://www.chi2ko.com/tool/CJK.htm" target="_blank" rel="noopener">汉字对应表</a>。</p>
+<h3 id="Unicode存在的问题："><a href="#Unicode存在的问题：" class="headerlink" title="Unicode存在的问题："></a>Unicode存在的问题：</h3><p>需要注意的是，Unicode只是一个符号集，它只规定了符号的二进制代码，却没有规定这个二进制代码应该如何存储。</p>
+<p>比如，汉字”严”的unicode是十六进制数4E25，转换成二进制数足足有15位（100111000100101），也就是说这个符号的表示至少需要2个字节。表示其他更大的符号，可能需要3个字节或者4个字节，甚至更多。</p>
+<p>这里就有两个严重的问题，第一个问题是，如何才能区别Unicode和ASCII？计算机怎么知道三个字节表示一个符号，而不是分别表示三个符号呢？第二个问题是，我们已经知道，英文字母只用一个字节表示就够了，如果Unicode统一规定，每个符号用三个或四个字节表示，那么每个英文字母前都必然有二到三个字节是0，这对于存储来说是极大的浪费，文本文件的大小会因此大出二三倍，这是无法接受的。</p>
+<p>它们造成的结果是：1）出现了Unicode的多种存储方式，也就是说有许多种不同的二进制格式，可以用来表示Unicode。2）Unicode在很长一段时间内无法推广，直到互联网的出现。</p>
+<h2 id="UTF-8"><a href="#UTF-8" class="headerlink" title="UTF-8"></a>UTF-8</h2><p>互联网的普及，强烈要求出现一种统一的编码方式。<strong>UTF-8就是在互联网上使用最广的一种Unicode的实现方式</strong></p>
+<p>UTF-8最大的一个特点，就是它是<strong>一种变长的编码方式</strong>。它可以使用1~4个字节表示一个符号，根据不同的符号而变化字节长度。</p>
+<p>UTF-8的编码规则很简单，只有二条：</p>
+<p>1）对于单字节的符号，字节的第一位设为0，后面7位为这个符号的unicode码。因此对于英语字母，UTF-8编码和ASCII码是相同的。</p>
+<p>2）对于n字节的符号（n&gt;1），第一个字节的前n位都设为1，第n+1位设为0，后面字节的前两位一律设为10。剩下的没有提及的二进制位，全部为这个符号的unicode码。</p>
+<p>下表总结了编码规则，字母x表示可用编码的位。</p>
+<p>Unicode符号范围 | UTF-8编码方式<br>(十六进制) | （二进制）<br>——————–+———————————————<br>0000 0000-0000 007F | 0xxxxxxx<br>0000 0080-0000 07FF | 110xxxxx 10xxxxxx<br>0000 0800-0000 FFFF | 1110xxxx 10xxxxxx 10xxxxxx<br>0001 0000-0010 FFFF | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx</p>
+<p>跟据上表，解读UTF-8编码非常简单。如果一个字节的第一位是0，则这个字节单独就是一个字符；如果第一位是1，则连续有多少个1，就表示当前字符占用多少个字节。</p>
+<p>下面，还是以汉字”严”为例，演示如何实现UTF-8编码。</p>
+<p>已知”严”的unicode是4E25（100111000100101），根据上表，可以发现4E25处在第三行的范围内（0000 0800-0000 FFFF），因此”严”的UTF-8编码需要三个字节，即格式是”1110xxxx 10xxxxxx 10xxxxxx”。然后，从”严”的最后一个二进制位开始，依次从后向前填入格式中的x，多出的位补0。这样就得到了，”严”的UTF-8编码是”11100100 10111000 10100101”，转换成十六进制就是E4B8A5。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;b=<span class="string">u"严"</span></span><br><span class="line">&gt;&gt;&gt;b</span><br><span class="line"><span class="string">u'\u4e25'</span></span><br><span class="line">&gt;&gt;&gt;a=<span class="string">"严"</span></span><br><span class="line">&gt;&gt;&gt;a</span><br><span class="line"><span class="string">'\xe4\xb8\a5'</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;b.encode(<span class="string">"utf-8"</span>)</span><br><span class="line"><span class="string">'\xe4\xb8\xa5'</span></span><br><span class="line">&gt;&gt;&gt;b.encode(<span class="string">'ascii'</span>)</span><br><span class="line">UnicodeEncodeError: <span class="string">'ascii'</span> codec can<span class="string">'t encode character u'</span>\u4e25<span class="string">' in position 0: ordinal not in range(128)</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&gt;&gt;&gt;'</span>\xe4\xb8\xa5<span class="string">'.decode('</span>utf<span class="number">-8</span><span class="string">')</span></span><br><span class="line"><span class="string">u'</span>\u4e25<span class="string">'</span></span><br></pre></td></tr></table></figure>
+<h2 id="Python的字符串与编码"><a href="#Python的字符串与编码" class="headerlink" title="Python的字符串与编码"></a>Python的字符串与编码</h2><h3 id="Py文件中的编码"><a href="#Py文件中的编码" class="headerlink" title="Py文件中的编码"></a>Py文件中的编码</h3><p>Python默认脚本文件都是ANSCII编码，当文件中包含中文字符的时候就需要在第一行加上编码声明</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#!/usr/bin/env python</span></span><br><span class="line"><span class="comment"># -*- coding: utf-8 -*-</span></span><br></pre></td></tr></table></figure>
+<p>第一行注释是为了告诉Linux/OS X系统，这是一个Python可执行程序，Windows系统会忽略这个注释；</p>
+<p>第二行注释是为了告诉Python解释器，按照UTF-8编码读取源代码，否则，你在源代码中写的中文输出可能会有乱码。</p>
+<h3 id="Python中的编码与解码"><a href="#Python中的编码与解码" class="headerlink" title="Python中的编码与解码"></a>Python中的编码与解码</h3><p>因为Python的诞生比Unicode标准发布的时间还要早，所以最早的Python只支持ASCII编码，普通的字符串<code>&#39;ABC&#39;</code>在Python内部都是ASCII编码的。Python提供了ord()和chr()函数，可以把字母和对应的数字相互转换：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;ord(<span class="string">'A'</span>)</span><br><span class="line"><span class="number">65</span></span><br><span class="line">&gt;&gt;&gt;chr(<span class="number">65</span>)</span><br><span class="line"><span class="string">'A'</span></span><br></pre></td></tr></table></figure>
+<p>Python后来添加了对Unicode的支持，以Unicode表示的字符串用<code>u&#39;...&#39;</code>来表示，比如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">print</span> <span class="string">u'中文'</span></span><br><span class="line">中文</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">u'中'</span></span><br><span class="line"><span class="string">u'\u4e2d'</span></span><br></pre></td></tr></table></figure>
+<p>写<code>u&#39;中&#39;</code>和<code>u&#39;\u4e2d&#39;</code>是一样的，<code>\u</code>后面是十六进制的Unicode码。因此，<code>u&#39;A&#39;</code>和<code>u&#39;\u0041&#39;</code>也是一样的。</p>
+<p>把<code>u&#39;xxx&#39;</code>Unicode转换为UTF-8编码的<code>&#39;xxx&#39;</code>用<code>encode(&#39;utf-8&#39;)</code>方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">u'ABC'</span>.encode(<span class="string">'utf-8'</span>)</span><br><span class="line"><span class="string">'ABC'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">u'中文'</span>.encode(<span class="string">'utf-8'</span>)</span><br><span class="line"><span class="string">'\xe4\xb8\xad\xe6\x96\x87'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Python当然也支持其他编码方式，比如把Unicode编码成GB2312, 这种方式纯属自找麻烦，如果没有特殊业务要求，请牢记仅使用Unicode和UTF-8这两种编码方式。</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">u'中文'</span>.encode(<span class="string">'gb2312'</span>)</span><br><span class="line"><span class="string">'\xd6\xd0\xce\xc4'</span></span><br></pre></td></tr></table></figure>
+<p>反过来，把UTF-8编码表示的字符串<code>&#39;xxx&#39;</code>转换为Unicode字符串<code>u&#39;xxx&#39;</code>用<code>decode(&#39;utf-8&#39;)</code>方法：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">'abc'</span>.decode(<span class="string">'utf-8'</span>)</span><br><span class="line"><span class="string">u'abc'</span></span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">'\xe4\xb8\xad\xe6\x96\x87'</span>.decode(<span class="string">'utf-8'</span>)</span><br><span class="line"><span class="string">u'\u4e2d\u6587'</span></span><br><span class="line"><span class="comment">#这里u'\u4e2d\u6587'与u'中文'是一样的</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;<span class="string">'\xd6\xd0\xce\xc4'</span>.decode(<span class="string">'gb2312'</span>)</span><br><span class="line"><span class="string">u'\u4e2d\u6587'</span></span><br></pre></td></tr></table></figure>
+<h3 id="非法字符"><a href="#非法字符" class="headerlink" title="非法字符"></a>非法字符</h3><p>对于一些非法字符，如全角空格，转码过程会出现异常。解决办法是：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s.decode(<span class="string">"gbk"</span>,<span class="string">'ignore'</span>)</span><br></pre></td></tr></table></figure>
+<p>因为decode函数原型是 <code>decode([encoding],[errors=&#39;strict&#39;])</code> 可以用第二个参数来控制错误处理的策略，默认的参数是strict，代表遇到非法字符时候抛出异常</p>
+<ul>
+<li>ignore：会忽略非法字符</li>
+<li>replace：会用？取代非法字符</li>
+<li>xmlcharreplace：使用XML的字符引用</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>由于历史遗留问题，Python 2.x版本虽然支持Unicode，但在语法上需要<code>&#39;xxx&#39;</code>和<code>u&#39;xxx&#39;</code>两种字符串表示方式。</p>
+<p>在Python 3.x版本中，把<code>&#39;xxx&#39;</code>和<code>u&#39;xxx&#39;</code>统一成Unicode编码，即写不写前缀<code>u</code>都是一样的，而以字节形式表示的字符串则必须加上<code>b</code>前缀：<code>b&#39;xxx&#39;</code>。</p>
+<p>格式化字符串的时候，可以用Python的交互式命令行测试，方便快捷。</p>
+<p>用代码说就是</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;a=<span class="string">"中文"</span></span><br><span class="line"><span class="comment"># Python 字符串之前不加u的话 默认使用UTF-8编码方法存储中文</span></span><br><span class="line">&gt;&gt;&gt;a</span><br><span class="line"><span class="string">'\xe4\xb8\xad\xe6\x96\x87'</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 如果想让它能正常显示出来，需要按utf-8的方法解码成Unicode</span></span><br><span class="line">&gt;&gt;&gt;a.decode(<span class="string">"utf-8"</span>)</span><br><span class="line"><span class="string">u'\u4e2d\u6587'</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;a=<span class="string">u"中文"</span> </span><br><span class="line"><span class="comment">#字符串前加u的话 使用Unicode方式存储</span></span><br><span class="line">&gt;&gt;&gt;a</span><br><span class="line"><span class="string">u'\u4e2d\u6587'</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#如果想让它保存成UTF-8的编码形式</span></span><br><span class="line">&gt;&gt;&gt;a.encode(<span class="string">"utf-8"</span>)</span><br><span class="line"><span class="string">'\xe4\xb8\xad\xe6\x96\x87'</span></span><br></pre></td></tr></table></figure>
+<h2 id="Python的编码检测"><a href="#Python的编码检测" class="headerlink" title="Python的编码检测"></a>Python的编码检测</h2><p>使用chardet可以很方便的时间字符串/文本的检测</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt;<span class="keyword">import</span> urllib</span><br><span class="line">&gt;&gt;&gt;rawdata = urllib.urlopen(<span class="string">'http://www.google.cn/'</span>).read()</span><br><span class="line">&gt;&gt;&gt;<span class="keyword">import</span> chardet</span><br><span class="line">&gt;&gt;&gt;chardet.detect(rawdata)</span><br><span class="line">&#123;<span class="string">'confidence'</span>: <span class="number">0.98999999999999999</span>, <span class="string">'encoding'</span>: <span class="string">'GB2312'</span>&#125;</span><br><span class="line">&gt;&gt;&gt;a=<span class="string">"中文说的好不好"</span></span><br><span class="line">&gt;&gt;&gt;chardet.detect(a)</span><br><span class="line">&#123;<span class="string">'confidence'</span>: <span class="number">0.98999999999999999</span>, <span class="string">'encoding'</span>: <span class="string">'utf-8'</span>&#125;</span><br><span class="line">&gt;&gt;&gt;chardet.detect(a.decode(<span class="string">"utf-8"</span>).encode(<span class="string">"gbk"</span>))</span><br><span class="line">&#123;<span class="string">'confidence'</span>: <span class="number">0.99</span>, <span class="string">'encoding'</span>: <span class="string">'GB2312'</span>&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="参考与感谢"><a href="#参考与感谢" class="headerlink" title="参考与感谢"></a>参考与感谢</h2><h3 id="廖雪峰python3教程"><a href="#廖雪峰python3教程" class="headerlink" title="廖雪峰python3教程"></a>廖雪峰python3教程</h3><ul>
+<li><a href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000/001431664106267f12e9bef7ee14cf6a8776a479bdec9b9000" target="_blank" rel="noopener">字符串和编码</a></li>
+</ul>
+<h3 id="博客"><a href="#博客" class="headerlink" title="博客"></a>博客</h3><ul>
+<li><a href="http://2wildkids.com/2016/10/12/%E5%AD%97%E7%AC%A6%E9%9B%86%E4%B8%8E%E7%BC%96%E7%A0%81%E7%9A%84%E6%81%A9%E6%80%A8%E6%83%85%E4%BB%87/" target="_blank" rel="noopener">字符集与编码的恩怨情仇</a></li>
+<li><a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html" target="_blank" rel="noopener">字符编码笔记：ASCII，Unicode和UTF-8 </a></li>
+<li><a href="http://gitbook.cn/books/599d075614d1bc13375caeaf/index.html" target="_blank" rel="noopener">字符编码的前世今生</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Unicode/" rel="tag"><i class="fa fa-tag"></i> Unicode</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/03/SSID&BSSID/" rel="next" title="SSID,BSSID,ESSID">
+                <i class="fa fa-chevron-left"></i> SSID,BSSID,ESSID
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/06/Algorithms/5-longestPalindrome/" rel="prev" title="longestPalindrome">
+                longestPalindrome <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/mine.jpg"
+                alt="XuyangBai" />
+            
+              <p class="site-author-name" itemprop="name">XuyangBai</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XuyangBai" target="_blank" title="Github">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Github</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.linkedin.com/in/%E6%97%AD%E9%98%B3-%E7%99%BD-419369140/" target="_blank" title="Linkedin">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Linkedin</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#字符集与编码"><span class="nav-number">1.</span> <span class="nav-text">字符集与编码</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么要进行编码？"><span class="nav-number">1.1.</span> <span class="nav-text">为什么要进行编码？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASCII码"><span class="nav-number">1.2.</span> <span class="nav-text">ASCII码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非ASCII码"><span class="nav-number">1.3.</span> <span class="nav-text">非ASCII码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unicode存在的问题："><span class="nav-number">1.3.1.</span> <span class="nav-text">Unicode存在的问题：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UTF-8"><span class="nav-number">1.4.</span> <span class="nav-text">UTF-8</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python的字符串与编码"><span class="nav-number">1.5.</span> <span class="nav-text">Python的字符串与编码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Py文件中的编码"><span class="nav-number">1.5.1.</span> <span class="nav-text">Py文件中的编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Python中的编码与解码"><span class="nav-number">1.5.2.</span> <span class="nav-text">Python中的编码与解码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#非法字符"><span class="nav-number">1.5.3.</span> <span class="nav-text">非法字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">1.5.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Python的编码检测"><span class="nav-number">1.6.</span> <span class="nav-text">Python的编码检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考与感谢"><span class="nav-number">1.7.</span> <span class="nav-text">参考与感谢</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#廖雪峰python3教程"><span class="nav-number">1.7.1.</span> <span class="nav-text">廖雪峰python3教程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#博客"><span class="nav-number">1.7.2.</span> <span class="nav-text">博客</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XuyangBai</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+<span class="post-meta-divider">|</span>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("uFLr00lMNa5H9BGnQpg2Oq9p-gzGzoHsz", "dwYpENeLoJzOf7Xx4pMlY5BE");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

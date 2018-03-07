@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="django,rest," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="什么是REST来自百度的定义：REST即表述性状态传递（英文：Representational State Transfer，简称REST）是Roy Fielding博士在2000年他的博士论文中提出来的一种软件架构风格。它是一种针对网络应用的设计和开发方式，可以降低开发的复杂性，提高系统的可伸缩性。">
+<meta name="keywords" content="django,rest">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Rest &amp; django-rest-framework">
+<meta property="og:url" content="http://yoursite.com/2017/05/19/Python/REST&Django-Rest-Framework/index.html">
+<meta property="og:site_name" content="Xuyang">
+<meta property="og:description" content="什么是REST来自百度的定义：REST即表述性状态传递（英文：Representational State Transfer，简称REST）是Roy Fielding博士在2000年他的博士论文中提出来的一种软件架构风格。它是一种针对网络应用的设计和开发方式，可以降低开发的复杂性，提高系统的可伸缩性。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/django/traditional.jpg">
+<meta property="og:image" content="http://yoursite.com/images/django/rest.jpg">
+<meta property="og:image" content="http://yoursite.com/images/django/rest1.jpg">
+<meta property="og:image" content="http://yoursite.com/images/django/youzhuangtai.jpg">
+<meta property="og:image" content="http://yoursite.com/images/django/wuzhuangtai.jpg">
+<meta property="og:updated_time" content="2017-05-24T11:36:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Rest &amp; django-rest-framework">
+<meta name="twitter:description" content="什么是REST来自百度的定义：REST即表述性状态传递（英文：Representational State Transfer，简称REST）是Roy Fielding博士在2000年他的博士论文中提出来的一种软件架构风格。它是一种针对网络应用的设计和开发方式，可以降低开发的复杂性，提高系统的可伸缩性。">
+<meta name="twitter:image" content="http://yoursite.com/images/django/traditional.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/19/Python/REST&Django-Rest-Framework/"/>
+
+
+
+
+
+  <title>Rest & django-rest-framework | Xuyang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xuyang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">读书，交友，爱，思考</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/19/Python/REST&Django-Rest-Framework/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XuyangBai">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/mine.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xuyang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Rest & django-rest-framework</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-19T10:59:35+08:00">
+                2017-05-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/19/Python/REST&Django-Rest-Framework/" class="leancloud_visitors" data-flag-title="Rest & django-rest-framework">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+		 <span>°C</span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,034
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="什么是REST"><a href="#什么是REST" class="headerlink" title="什么是REST"></a>什么是REST</h1><p>来自百度的定义：REST即表述性状态传递（英文：Representational State Transfer，简称REST）是Roy Fielding博士在2000年他的博士论文中提出来的一种<a href="http://baike.baidu.com/item/%E8%BD%AF%E4%BB%B6%E6%9E%B6%E6%9E%84" target="_blank" rel="noopener">软件架构</a>风格。它是一种针对<a href="http://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E5%BA%94%E7%94%A8" target="_blank" rel="noopener">网络应用</a>的设计和开发方式，可以降低开发的复杂性，提高系统的可伸缩性。</p>
+<a id="more"></a>
+<p>先用一个简单的采购方案例子来感受一下：</p>
+<p><img src="/images/django/traditional.jpg" alt=""></p>
+<p>可以看到，例子中定义了两个服务程序（没有包含任何实现细节）。这些服务程序的接口都是为了完成任务（正是我们讨论的OrderManagement和CustomerManagement服务）而定制的。如果客户端程序试图使用这些服务，那它必须针对这些特定接口进行编码——不可能在这些接口定义之前，使用客户程序去有目的地和接口协作。这些接口定义了服务程序的应用协议（application protocol）</p>
+<p>而在REST的设计模式中，将通过组成HTTP应用协议的通用接口访问服务程序</p>
+<p><img src="/images/django/rest.jpg" alt=""></p>
+<p>可以看到，服务程序中的特定操作被映射成为标准的HTTP方法——为了消除歧义，我创建了一组全新的资源。标识一个顾客的URI上的GET方法正好相当于getCustomerDetails操作。有人用三角形形象化地说明了这一点：</p>
+<p><img src="/images/django/rest1.jpg" alt=""></p>
+<p>可以看到在第一种方法中，你拥有许多操作，许多种类的数据以及固定数量的“实例”（本质上和你拥有的服务程序数量一致）。在第二种方法中，你拥有固定数量的操作，许多种类的数据和许多调用固定方法的对象。它的意义在于，证明了通过这两种方式，你基本上可以表示任何你喜欢的事情。</p>
+<h2 id="设计原则："><a href="#设计原则：" class="headerlink" title="设计原则："></a>设计原则：</h2><h3 id="显式的使用HTTP方法"><a href="#显式的使用HTTP方法" class="headerlink" title="显式的使用HTTP方法"></a>显式的使用HTTP方法</h3><p>​    REST 要求开发人员显式地使用 HTTP 方法，并且使用方式与协议定义一致。 这个基本 REST 设计原则建立了创建、读取、更新和删除（create, read, update, and delete，CRUD）操作与 HTTP 方法之间的一对一映射<strong>（且在URL中不应该使用动词）</strong>。 根据此映射：</p>
+<ul>
+<li>若要在服务器上创建资源，应该使用 POST 方法。</li>
+<li>若要检索某个资源，应该使用 GET 方法。</li>
+<li>若要更改资源状态或对其进行更新，应该使用 PUT 方法。</li>
+<li>若要删除某个资源，应该使用 DELETE 方法。</li>
+</ul>
+<p>e.g1：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">GET /adduser?name=Robert HTTP/1.1</span><br><span class="line">这是一个不好的设计，因为通过GET进行了更改操作, GET应该仅适用于检索</span><br><span class="line">，正确的方法是使用POST:</span><br><span class="line"></span><br><span class="line">POST /users HTTP/1.1</span><br><span class="line">Host: myserver</span><br><span class="line">Content-Type: application/xml</span><br><span class="line">&lt;?xml version="1.0"?&gt;</span><br><span class="line">&lt;user&gt;</span><br><span class="line">  &lt;name&gt;Robert&lt;/name&gt;</span><br><span class="line">&lt;/user&gt;</span><br></pre></td></tr></table></figure>
+<p>e.g.2</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">GET /updateuser?name=Robert&amp;newname=Bob HTTP/1.1</span><br><span class="line">通过HTTP GET进行了更新，正确做法是使用PUT</span><br><span class="line"></span><br><span class="line">PUT /users/Robert HTTP/1.1</span><br><span class="line">Host: myserver</span><br><span class="line">Content-Type: application/xml</span><br><span class="line">&lt;?xml version="1.0"?&gt;</span><br><span class="line">&lt;user&gt;</span><br><span class="line">  &lt;name&gt;Bob&lt;/name&gt;</span><br><span class="line">&lt;/user&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="无状态"><a href="#无状态" class="headerlink" title="无状态"></a>无状态</h3><p>​    无状态意味着 完整、独立的请求不要求服务器在处理请求时检索任何类型的应用程序上下文或状态。 REST Web 服务应用程序（或客户端）在 HTTP Header 和请求正文中包括服务器端组件生成响应所需要的所有参数、上下文和数据。</p>
+<p>eg:</p>
+<p><img src="/images/django/youzhuangtai.jpg" alt="有状态的设计"></p>
+<p>而无状态的服务器端组件不那么复杂，很容易跨进行负载平衡的服务器进行设计、编写和分布。 无状态的服务不仅性能更好，而且还将大部分状态维护职责转移给客户端应用程序。 在基于 REST 的 Web 服务中，服务器负责生成响应，并提供使客户端能够独自维护应用程序状态的接口。 例如，在针对多页结果集的请求中，客户端应该包括要检索的实际页编号，而不是简单地要求检索<em>下一页</em>（请参见图 2）</p>
+<p><img src="/images/django/wuzhuangtai.jpg" alt="无状态的设计"></p>
+<h3 id="公开目录结构式的URI"><a href="#公开目录结构式的URI" class="headerlink" title="公开目录结构式的URI"></a>公开目录结构式的URI</h3><p><strong>从对资源寻址的客户端应用程序的角度看，URI 决定了 REST Web 服务将具有的直观程度，以及服务是否将以设计人员能够预测的方式被使用</strong>。 基于 REST 的 Web 服务的第三个特征完全与 URI 相关。</p>
+<p>REST Web 服务 URI 的直观性应该达到很容易猜测的程度。 将 URI 看作是自身配备文档说明的接口，开发人员只需很少（如果有的话）的解释或参考资料即可了解它指向什么，并获得相关的资源。 为此，URI 的结构应该简单、可预测且易于理解。</p>
+<p>实现这种级别的可用性的方法之一是定义目录结构式的 URI。 此类 URI 具有层次结构，其根为单个路径，从根开始分支的是公开服务的主要方面的子路径。 根据此定义，URI 并不只是斜杠分隔的字符串，而是具有在节点上连接在一起的下级和上级分支的树。 例如，在一个收集从 Java 到报纸的各种主题的讨论线程服务中，您可能定义类似如下的结构化 URI 集合：<br><code>http://www.myservice.org/discussion/topics/{topic}</code></p>
+<p>根 <code>/discussion</code> 之下有一个 <code>/topics</code> 节点。 该节点之下有一系列主题名称，例如闲谈、技术等等，每个主题名称指向某个讨论线程。 在此结构中，只需在 /topics/ 后面输入某个内容即可容易地收集讨论线程。</p>
+<p>在某些情况下，指向资源的路径尤其适合于目录式结构。 例如，以按日期进行组织的资源为例，这种资源非常适合于使用层次结构语法。</p>
+<p>此示例非常直观，因为它基于规则：<br><code>http://www.myservice.org/discussion/2008/12/10/{topic}</code></p>
+<p>第一个路径片段是四个数字的年份，第二个路径片断是两个数字的日期，第三个片段是两个数字的月份。 这样解释它可能有点愚蠢，但这就是我们追求的简单级别。 人类和计算机能够容易地生成类似如此的结构化 URI，因为这些 URI 基于规则。 在语法的空隙中填入路径部分就大功告成了，因为存在用于组合 URI 的明确模式：<br><code>http://www.myservice.org/discussion/{year}/{day}/{month}/{topic}</code></p>
+<p>在考虑基于 REST 的 Web 服务的 URI 结构时，需要指出的一些附加指导原则包括：</p>
+<ul>
+<li>隐藏服务器端脚本技术文件扩展名（.jsp、.php、.asp）——如果有的话，以便您能够移植到其他脚本技术而不用更改 URI。</li>
+<li>将所有内容保持小写。</li>
+<li>将空格替换为连字符或下划线（其中一种或另一种）。</li>
+<li>尽可能多地避免查询字符串。</li>
+<li>如果请求 URI 用于部分路径，与使用 404 Not Found 代码不同，应该始终提供缺省页面或资源作为响应。</li>
+</ul>
+<p>URI 还应该是静态的，以便在资源发生更改或服务的实现发生更改时，链接保持不变。 这可以实现书签功能。 URI 中编码的资源之间的关系与在存储资源的位置表示资源关系的方式无关也是非常重要的。</p>
+<h3 id="传输XML或者JSON"><a href="#传输XML或者JSON" class="headerlink" title="传输XML或者JSON"></a>传输XML或者JSON</h3><h2 id="In-Conclusion"><a href="#In-Conclusion" class="headerlink" title="In Conclusion"></a>In Conclusion</h2><p>REST除了给我们带来了一个崭新的架构以外，还有一个重要的贡献是在开发系统过程中的一种新的思维方式：通过url来设计系统的结构。根据REST，每个url都代表一个resource<strong>（URL中不能带有动词）</strong>，而整个系统就是由这些resource组成的。因此，如果url是设计良好的，那么系统的结构就也应该是设计良好的。</p>
+<h1 id="Django-Rest-Framework"><a href="#Django-Rest-Framework" class="headerlink" title="Django Rest Framework"></a>Django Rest Framework</h1><p>waiting …</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.ics.uci.edu/~fielding/pubs/dissertation/top.htm" target="_blank" rel="noopener">Architectural Styles andthe Design of Network-based Software Architectures</a></li>
+<li><a href="http://baike.baidu.com/item/rest/6330506" target="_blank" rel="noopener">百度知道REST</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/webservices/ws-restful/" target="_blank" rel="noopener">基于REST的WEB服务</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/django/" rel="tag"><i class="fa fa-tag"></i> django</a>
+          
+            <a href="/tags/rest/" rel="tag"><i class="fa fa-tag"></i> rest</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/05/06/Algorithms/5-longestPalindrome/" rel="next" title="longestPalindrome">
+                <i class="fa fa-chevron-left"></i> longestPalindrome
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/24/Git/" rel="prev" title="Git">
+                Git <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/mine.jpg"
+                alt="XuyangBai" />
+            
+              <p class="site-author-name" itemprop="name">XuyangBai</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XuyangBai" target="_blank" title="Github">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Github</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.linkedin.com/in/%E6%97%AD%E9%98%B3-%E7%99%BD-419369140/" target="_blank" title="Linkedin">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Linkedin</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#什么是REST"><span class="nav-number">1.</span> <span class="nav-text">什么是REST</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#设计原则："><span class="nav-number">1.1.</span> <span class="nav-text">设计原则：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#显式的使用HTTP方法"><span class="nav-number">1.1.1.</span> <span class="nav-text">显式的使用HTTP方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#无状态"><span class="nav-number">1.1.2.</span> <span class="nav-text">无状态</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#公开目录结构式的URI"><span class="nav-number">1.1.3.</span> <span class="nav-text">公开目录结构式的URI</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#传输XML或者JSON"><span class="nav-number">1.1.4.</span> <span class="nav-text">传输XML或者JSON</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#In-Conclusion"><span class="nav-number">1.2.</span> <span class="nav-text">In Conclusion</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Django-Rest-Framework"><span class="nav-number">2.</span> <span class="nav-text">Django Rest Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">2.1.</span> <span class="nav-text">参考</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XuyangBai</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+<span class="post-meta-divider">|</span>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("uFLr00lMNa5H9BGnQpg2Oq9p-gzGzoHsz", "dwYpENeLoJzOf7Xx4pMlY5BE");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

