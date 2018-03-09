@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="LintCode,NineChapter," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="九章第三讲，宽度优先搜索。主要分为二叉树上的宽搜、图上的宽搜和矩阵上的宽搜三部分。 宽度优先搜索 BFS什么是宽度优先搜索先看下wikipedia的解释： Breadth-first search (BFS) is an algorithm for traversing or searching tree or gra">
+<meta name="keywords" content="LintCode,NineChapter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="九章-BFS">
+<meta property="og:url" content="http://yoursite.com/2018/03/08/Algorithms/九章-BFS/index.html">
+<meta property="og:site_name" content="Xuyang">
+<meta property="og:description" content="九章第三讲，宽度优先搜索。主要分为二叉树上的宽搜、图上的宽搜和矩阵上的宽搜三部分。 宽度优先搜索 BFS什么是宽度优先搜索先看下wikipedia的解释： Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph. It starts at the tree root or some a">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-03-09T08:34:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="九章-BFS">
+<meta name="twitter:description" content="九章第三讲，宽度优先搜索。主要分为二叉树上的宽搜、图上的宽搜和矩阵上的宽搜三部分。 宽度优先搜索 BFS什么是宽度优先搜索先看下wikipedia的解释： Breadth-first search (BFS) is an algorithm for traversing or searching tree or graph. It starts at the tree root or some a">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/08/Algorithms/九章-BFS/"/>
+
+
+
+
+
+  <title>九章-BFS | Xuyang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xuyang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">读书，交友，爱，思考</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/08/Algorithms/九章-BFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XuyangBai">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/mine.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xuyang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">九章-BFS</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-08T22:59:35+08:00">
+                2018-03-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/厚积薄发/" itemprop="url" rel="index">
+                    <span itemprop="name">厚积薄发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/03/08/Algorithms/九章-BFS/" class="leancloud_visitors" data-flag-title="九章-BFS">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+		 <span>°C</span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4,780
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>九章第三讲，宽度优先搜索。主要分为二叉树上的宽搜、图上的宽搜和矩阵上的宽搜三部分。</p>
+<h1 id="宽度优先搜索-BFS"><a href="#宽度优先搜索-BFS" class="headerlink" title="宽度优先搜索 BFS"></a>宽度优先搜索 BFS</h1><h2 id="什么是宽度优先搜索"><a href="#什么是宽度优先搜索" class="headerlink" title="什么是宽度优先搜索"></a>什么是宽度优先搜索</h2><p>先看下wikipedia的解释： <strong>Breadth-first search</strong> (<strong>BFS</strong>) is an algorithm for traversing or searching <a href="https://en.wikipedia.org/wiki/Tree_data_structure" title="Tree data structure" target="_blank" rel="noopener">tree</a> or <a href="https://en.wikipedia.org/wiki/Graph_(data_structure" target="_blank" rel="noopener">graph</a>. It starts at the tree root or some arbitrary node of a graph, and explores the neighbor nodes first, before moving to the next level neighbours.</p>
+<p>通常BFS会需要用到两种数据结构</p>
+<ol>
+<li>Queue 利用queue先进先出的特点保证先访问neighbor结点再访问下个level的结点</li>
+<li>Set 利用set来记录已经访问过的结点，去重</li>
+</ol>
+<p>一般来说BFS分三部分可以实现</p>
+<ol>
+<li>把root(起始结点)放进queue中<code>queue.offer(root);</code></li>
+<li>while循环 <code>while(!queue.isEmpty()){}</code></li>
+<li>for 当前层，拓展出下一层</li>
+</ol>
+<a id="more"></a>
+<p>在下面的题目中可以体会一下这三个步骤</p>
+<h2 id="什么时候应该使用BFS"><a href="#什么时候应该使用BFS" class="headerlink" title="什么时候应该使用BFS?"></a>什么时候应该使用BFS?</h2><ul>
+<li>树的层级遍历</li>
+<li>图的遍历 Traversal in Graph<ul>
+<li>由点及面</li>
+<li>拓扑排序</li>
+</ul>
+</li>
+<li>最短路径问题 Shortest Path in Simple Graph<ul>
+<li>仅限于简单图求最短路径（即每个边长度都是1，且没有方向)    </li>
+</ul>
+</li>
+</ul>
+<h2 id="宽搜的时间复杂度"><a href="#宽搜的时间复杂度" class="headerlink" title="宽搜的时间复杂度"></a>宽搜的时间复杂度</h2><p><code>O(n + m)</code> 这里的n是点的个数, m是边的个数。 因为while循环(每次poll一个点出来) 会执行n次，内部循环(for 所有 neighbor)加起来会执行m次，因为找邻居实际就是在找边，所以加起来就是m次。 一共是<code>O(n + m)</code></p>
+<h1 id="二叉树上的宽搜"><a href="#二叉树上的宽搜" class="headerlink" title="二叉树上的宽搜"></a>二叉树上的宽搜</h1><p>因为二叉树是一种特殊的图，它具有方向性，且不存在环，所以在BFS中是比较简单的一类。就先通过两个二叉树上的宽搜来练练手吧。</p>
+<h2 id="Example-Binary-Tree-Level-Order-Traversal"><a href="#Example-Binary-Tree-Level-Order-Traversal" class="headerlink" title="Example: Binary Tree Level Order Traversal"></a>Example: Binary Tree Level Order Traversal</h2><p><a href="http://www.lintcode.com/en/problem/binary-tree-level-order-traversal/" target="_blank" rel="noopener">Binary Tree Level Order Traversal</a> 二叉树的层级遍历，这道题就是一个典型的宽度优先搜索。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;List&lt;Integer&gt;&gt; levelOrder(TreeNode root) &#123;</span><br><span class="line">    List&lt;List&lt;Integer&gt;&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span>(root == <span class="keyword">null</span>) <span class="keyword">return</span> result;</span><br><span class="line">    Queue&lt;TreeNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;TreeNode&gt;();</span><br><span class="line">    # step1 : root入队列</span><br><span class="line">    queue.offer(root);</span><br><span class="line">    # step2 : while循环</span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        # step3 : for当前层，拓展出下一层</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        List&lt;Integer&gt; level = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i&lt;size;i++)&#123;</span><br><span class="line">            TreeNode node = queue.poll();</span><br><span class="line">            level.add(node.val);</span><br><span class="line">            <span class="keyword">if</span>(node.left != <span class="keyword">null</span>)</span><br><span class="line">                queue.offer(node.left);</span><br><span class="line">            <span class="keyword">if</span>(node.right != <span class="keyword">null</span>)</span><br><span class="line">                queue.offer(node.right);</span><br><span class="line">        &#125;</span><br><span class="line">        result.add(level);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里需要注意的是代码第7行需要用<code>size = queue.size()</code>而不是直接<code>for(int i = 0; i &lt; queue.size(); i++)</code>的原因是在循环的过程中queue会不断加入新的元素，所以queue.size()会不停变化，而我们只想遍历这个level的结点，所以需要事先把size取出来。</p>
+<p>Follow Up：<a href="http://www.lintcode.com/en/problem/binary-tree-level-order-traversal-ii/" target="_blank" rel="noopener">Binary Tree Level Order Traversal ii</a>要求返回bottom-up的层级遍历。 则只需要在上面代码的基础上加上一句<code>Collections.reverse(result);</code>即可</p>
+<h2 id="Example2-Binary-Tree-Zigzag-Order-Traversal"><a href="#Example2-Binary-Tree-Zigzag-Order-Traversal" class="headerlink" title="Example2: Binary Tree Zigzag Order Traversal"></a>Example2: Binary Tree Zigzag Order Traversal</h2><p><a href="http://www.lintcode.com/en/problem/binary-tree-zigzag-level-order-traversal/" target="_blank" rel="noopener">Binary Tree Zigzag Order Traversal</a> 这道题我去今日头条面试的时候还有问到过这道题，当时的我觉得好难啊。其实就是一个BFS的变形，根据当前层(假设root是第一层)的奇偶性, 如果是偶数层, 则把这一层数组颠倒一下即可。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 初始 num = 1;</span></span><br><span class="line"><span class="keyword">if</span>(num % <span class="number">2</span> == <span class="number">0</span>)&#123;</span><br><span class="line">	Collections.reverse(level);</span><br><span class="line">&#125;</span><br><span class="line">num++;</span><br></pre></td></tr></table></figure></p>
+<h2 id="More"><a href="#More" class="headerlink" title="More"></a>More</h2><p><a href="http://www.lintcode.com/en/problem/convert-binary-tree-to-linked-lists-by-depth/" target="_blank" rel="noopener">Convert Binary Tree to Linked Lists by Depth</a></p>
+<h1 id="图上的宽搜"><a href="#图上的宽搜" class="headerlink" title="图上的宽搜"></a>图上的宽搜</h1><p>图上的宽搜和树上的有什么区别？</p>
+<ol>
+<li>图上可能存在环，这意味着同一个结点可能会重复进入queue</li>
+<li>图上可能存在没有联通的点（孤立的点）</li>
+<li>节点之间没有父子关系了，而是邻居关系。</li>
+</ol>
+<p>在图上进行宽搜的时候通常会用到邻接表(HashMap这样的数据结构)，key是节点本身，value是节点的邻居。 还需要使用Set来判断node是否已遍历过，防止节点重复进入queue</p>
+<h2 id="由点及面"><a href="#由点及面" class="headerlink" title="由点及面"></a>由点及面</h2><h3 id="Example1-Graph-Valid-Tree"><a href="#Example1-Graph-Valid-Tree" class="headerlink" title="Example1: Graph Valid Tree"></a>Example1: Graph Valid Tree</h3><p><a href="http://www.lintcode.com/en/problem/graph-valid-tree/" target="_blank" rel="noopener">Graph Valid Tree</a> 这道题给你图的点数和边，让你判断是否能构成一个树。 这里我们需要明确的是，一个具有n个点的图要想成为一棵树，需要满足两个条件：</p>
+<ol>
+<li>有n-1条边</li>
+<li><p>这n个点相互联通</p>
+<p>所以我们从任意一个点出发（由点及面），进行深度优先搜索，搜索的过程中用set来防止节点重复进入队列。直到我们的队列为空时，看set中是否包含了所有的元素，如果是则说明这就是一棵树。</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">validTree</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span>[][] edges)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> len = edges.length;</span><br><span class="line">    <span class="keyword">if</span>(n - <span class="number">1</span> != len) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">    <span class="comment">// 邻接表</span></span><br><span class="line">    Map&lt;Integer, Set&lt;Integer&gt;&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++)&#123;</span><br><span class="line">        map.put(i, <span class="keyword">new</span> HashSet&lt;Integer&gt;());</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++)&#123;</span><br><span class="line">        <span class="keyword">int</span> u = edges[i][<span class="number">0</span>];</span><br><span class="line">        <span class="keyword">int</span> v = edges[i][<span class="number">1</span>];</span><br><span class="line">        map.get(u).add(v);</span><br><span class="line">        map.get(v).add(u);</span><br><span class="line">    &#125;</span><br><span class="line">    Queue&lt;Integer&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    queue.offer(<span class="number">0</span>);</span><br><span class="line">    Set&lt;Integer&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; size; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> node = queue.poll();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> next: map.get(node))&#123;</span><br><span class="line">                <span class="keyword">if</span>(!set.contains(next))&#123;</span><br><span class="line">                    queue.offer(next);</span><br><span class="line">                    set.add(next);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> set.size() == n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这里比较重要的一个东西就是邻接表，做图的遍历问题一般都需要用到邻接表(可用邻接矩阵或者类似题目中的edge set来代替)</p>
+<h3 id="Example2-Clone-Graph"><a href="#Example2-Clone-Graph" class="headerlink" title="Example2: Clone Graph"></a>Example2: Clone Graph</h3><p><a href="http://www.lintcode.com/en/problem/clone-graph/" target="_blank" rel="noopener">Clone Graph</a> 这道题让我们克隆一个图。思路就是先DFS遍历图的所有节点，得到所有节点的List之后克隆所有的结点，并创建一个originNode -&gt; cloneNode的映射Map。最后再利用这个Map遍历并克隆所有的边。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> UndirectedGraphNode <span class="title">cloneGraph</span><span class="params">(UndirectedGraphNode node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(node == <span class="keyword">null</span>) <span class="keyword">return</span> node;</span><br><span class="line">    <span class="comment">//find all the nodes</span></span><br><span class="line">    ArrayList&lt;UndirectedGraphNode&gt; nodes = <span class="keyword">new</span> ArrayList&lt;UndirectedGraphNode&gt;();</span><br><span class="line">    nodes = getNodes(node);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// copy all the nodes</span></span><br><span class="line">    Map&lt;UndirectedGraphNode,UndirectedGraphNode&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(UndirectedGraphNode n: nodes)&#123;</span><br><span class="line">        map.put(n, <span class="keyword">new</span> UndirectedGraphNode(n.label));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// copy all the edges</span></span><br><span class="line">    <span class="keyword">for</span>(UndirectedGraphNode n : nodes)&#123;</span><br><span class="line">        <span class="keyword">for</span>(UndirectedGraphNode nei: n.neighbors)&#123;</span><br><span class="line">            map.get(n).neighbors.add(map.get(nei));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> map.get(node);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> ArrayList&lt;UndirectedGraphNode&gt; <span class="title">getNodes</span><span class="params">(UndirectedGraphNode node)</span></span>&#123;</span><br><span class="line">    Queue&lt;UndirectedGraphNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    Set&lt;UndirectedGraphNode&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">    ArrayList&lt;UndirectedGraphNode&gt; nodes = <span class="keyword">new</span> ArrayList&lt;UndirectedGraphNode&gt;();</span><br><span class="line">    queue.offer(node);</span><br><span class="line">    set.add(node);</span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)&#123;</span><br><span class="line">            UndirectedGraphNode n = queue.poll();</span><br><span class="line">            nodes.add(n);</span><br><span class="line">            <span class="keyword">for</span>(UndirectedGraphNode nei : n.neighbors)&#123;</span><br><span class="line">                <span class="keyword">if</span>(!set.contains(nei))&#123;</span><br><span class="line">                    queue.offer(nei);</span><br><span class="line">                    set.add(nei);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> nodes;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这两道题都属于图的遍历(由点及面) ，类似的题目还有<a href="http://www.lintcode.com/en/problem/search-graph-nodes/" target="_blank" rel="noopener">Search Graph Nodes</a>，<a href="http://www.lintcode.com/problem/connected-component-in-undirected-graph/" target="_blank" rel="noopener">Connected Component in Undirected Graph</a>, <a href="http://www.lintcode.com/problem/smallest-rectangle-enclosing-black-pixels/" target="_blank" rel="noopener">Smallest Rectangle Enclosing Black Pixel</a></p>
+<h2 id="拓扑排序"><a href="#拓扑排序" class="headerlink" title="拓扑排序"></a>拓扑排序</h2><p>上面两个题涉及到的都是无向图，对于有向图，我们就来到另一类问题 – 拓扑排序。 拓扑排序的题一般会问两种</p>
+<ol>
+<li>求<strong>任意</strong>拓扑序( 如果是求所有的拓扑序 应该用DFS去做)</li>
+<li>存不存在拓扑序(如果出现了循环依赖，就不存在拓扑序)</li>
+</ol>
+<p>举个例子来说，我们有ABCDE五门课程，其中A(计算机导论)是B(C语言)的先修课, 而B是C(数据结构)和D(算法)的先修课，C是E(操作系统)的先修课，这样就组成了一个拓扑结构。 所以我们一般这样处理拓扑排序问题</p>
+<ol>
+<li>起点应当是入度为0的结点(没有先修课程的课)，即我们第一门应该学A</li>
+<li>当遍历过入度为0之后, 把A的后继课程的入度－1，即学过了A之后，B已经满足了他的先修条件，B的入度变成了0, 表示我们可以开始学B了</li>
+<li>如果结束循环的时候所有课程都已经修过，则就说明存在一个拓扑序。</li>
+</ol>
+<h3 id="Example1：Topological-Sorting"><a href="#Example1：Topological-Sorting" class="headerlink" title="Example1：Topological Sorting"></a>Example1：Topological Sorting</h3><p><a href="http://www.lintcode.com/problem/topological-sorting/" target="_blank" rel="noopener">Topological Sorting</a> 这道题让求任意一个拓扑序。</p>
+<p>利用我们之前说的方法</p>
+<ol>
+<li>首先求出每个点的入度，构造一个Map<node, integer=""></node,></li>
+<li>寻找入度为0的结点作为我们的起始结点。</li>
+<li>进入循环，将当前节点放入set中标记已经访问过。 在当前节点的邻居节点的入度都减一，并把入度变成0的邻居节点入队列表示已经可以访问这个节点。 </li>
+<li>当queue中没有节点的时候说明已经遍历结束。按进入队列的次序构成了拓扑序。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> ArrayList&lt;DirectedGraphNode&gt; <span class="title">topSort</span><span class="params">(ArrayList&lt;DirectedGraphNode&gt; graph)</span> </span>&#123;</span><br><span class="line">    ArrayList&lt;DirectedGraphNode&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">if</span>(graph == <span class="keyword">null</span> || graph.size() == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> results;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 计算每个点的入度</span></span><br><span class="line">    Map&lt;DirectedGraphNode, Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(DirectedGraphNode node: graph)&#123;</span><br><span class="line">        map.put(node, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(DirectedGraphNode node : graph)&#123;</span><br><span class="line">        <span class="keyword">for</span>(DirectedGraphNode nei: node.neighbors)&#123;</span><br><span class="line">            map.put(nei, map.get(nei) + <span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 找入度为0的点</span></span><br><span class="line">    Queue&lt;DirectedGraphNode&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(DirectedGraphNode node: graph)&#123;</span><br><span class="line">        <span class="keyword">if</span>(map.get(node) == <span class="number">0</span>)&#123;</span><br><span class="line">            queue.offer(node);</span><br><span class="line">            results.add(node);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">//循环 每次都把当前节点的邻居的入度减一</span></span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        DirectedGraphNode node = queue.poll();</span><br><span class="line">        <span class="keyword">for</span>(DirectedGraphNode nei: node.neighbors)&#123;</span><br><span class="line">            map.put(nei, map.get(nei) - <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span>(map.get(nei) == <span class="number">0</span>)&#123;</span><br><span class="line">                results.add(nei);</span><br><span class="line">                queue.offer(nei);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> results;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="Example2-Course-Schedule"><a href="#Example2-Course-Schedule" class="headerlink" title="Example2 : Course Schedule"></a>Example2 : Course Schedule</h3><p><a href="http://www.lintcode.com/en/problem/course-schedule/" target="_blank" rel="noopener">Course Schedule</a> 这道题就是我们前面举的先修课程的例子。只不过它是按照int[][]的类型给的先修课程。 只需要先遍历一遍<code>int[][] prerequisites</code>，然后构造一个<code>Map&lt;Integer, Hashset&lt;Integer&gt;&gt;</code>这样的map，key是课程编号，value是它的后继课程。然后方法与前面topological sorting完全类似。这道题问的是是否能修完所有的课程，那只用在出循环之后判断set中的课程数和numCourses是否相等即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">canFinish</span><span class="params">(<span class="keyword">int</span> numCourses, <span class="keyword">int</span>[][] prerequisites)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(numCourses == <span class="number">0</span> || prerequisites.length == <span class="number">0</span>)&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 计算入度 ，即每门课程的先修课程</span></span><br><span class="line">        List[] edges = <span class="keyword">new</span> ArrayList[numCourses];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; numCourses; i++)</span><br><span class="line">            edges[i] = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</span><br><span class="line">        <span class="keyword">int</span>[] degree = <span class="keyword">new</span> <span class="keyword">int</span>[numCourses];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span>[] pre: prerequisites)&#123;</span><br><span class="line">            degree[pre[<span class="number">0</span>]] = degree[pre[<span class="number">0</span>]] + <span class="number">1</span>;</span><br><span class="line">            edges[pre[<span class="number">1</span>]].add(pre[<span class="number">0</span>]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 找第一个没有入度的课程</span></span><br><span class="line">        Queue&lt;Integer&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        ArrayList&lt;Integer&gt; result = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numCourses; i++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(degree[i] == <span class="number">0</span>)&#123;</span><br><span class="line">                queue.offer(i);</span><br><span class="line">                result.add(i);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//dfs</span></span><br><span class="line">        <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">            <span class="keyword">int</span> num = queue.poll();</span><br><span class="line">            <span class="keyword">int</span> size = edges[num].size();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size ; i++)&#123;</span><br><span class="line">                <span class="keyword">int</span> pointer = (<span class="keyword">int</span>)edges[num].get(i);</span><br><span class="line">                degree[pointer] = degree[pointer] - <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span>(degree[pointer] == <span class="number">0</span>)&#123;</span><br><span class="line">                    queue.add(pointer);</span><br><span class="line">                    result.add(pointer);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> (result.size() == numCourses);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="More-1"><a href="#More-1" class="headerlink" title="More"></a>More</h3><p><a href="http://www.lintcode.com/problem/sequence-reconstruction/" target="_blank" rel="noopener">Sequence Reconstruction</a> 这道题问是否能从seqs中唯一重构出拓扑排序序列org。注意有这个唯一的要求，我们只需要保证队列中最多只有1个元素，且这个元素要和org中对应位置的相同。大致思路与上面的拓扑排序一样。</p>
+<h2 id="求最短路径"><a href="#求最短路径" class="headerlink" title="求最短路径"></a>求最短路径</h2><h3 id="Example1-Word-Ladder"><a href="#Example1-Word-Ladder" class="headerlink" title="Example1: Word Ladder"></a>Example1: Word Ladder</h3><p><a href="http://www.lintcode.com/problem/word-ladder/" target="_blank" rel="noopener">Word Ladder</a>这道题呢给我们一个字典，然后一个起点一个终点，每次变换一个字母，只能用字典中出现过的单词，求需要多少次变换可以变到终点单词。 </p>
+<p>仔细看看这其实就是一个求最短路径的问题，我们可以把字典构造成一个图，如果单词a可以通过变换一个字母变成单词b，那么我们就用一条边连接这两个单词。所以这道题就变成了在一个图中找start和end之间的最短距离。 </p>
+<p>而这个题的难点就在于如何构造这个图。我们可以对于任意一个单词(<code>O(n)</code>)，遍历整个字典(<code>O(n)</code>)，判断该单词与其他单词的是否只差1个字母(<code>O(L)</code>)。这样做法的时间复杂度是<code>O(n * n * L)</code>n是单词数，L是单词长度。 另一种做法是，对于任意一个单词(<code>O(n)</code>)我们尝试用26个字母替换其中的某个字母(<code>O(26 * L)</code>），然后判断新生成的单词是否存在字典中。判断是否存在可以用哈希表，时间复杂度为常数。所以这种方法的时间复杂度就是<code>O(n * 26 * L)</code> 。实际做的时候发现第一种方法是会超时的。</p>
+<p>第一种构造图的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, ArrayList&lt;String&gt;&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(String word:dict)&#123;</span><br><span class="line">        ArrayList&lt;String&gt; neighbors = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(String nei:dict)&#123;</span><br><span class="line">            <span class="keyword">if</span>(distance(word, nei) == <span class="number">1</span>)&#123;</span><br><span class="line">                neighbors.add(nei);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        map.put(word, neighbors);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>第二种构造图的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构造邻接表</span></span><br><span class="line">Map&lt;String, ArrayList&lt;String&gt;&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"><span class="keyword">for</span>(String word:dict)&#123;</span><br><span class="line">    ArrayList&lt;String&gt; neighbors = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; word.length(); i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">char</span> a = <span class="string">'a'</span>; a &lt; <span class="string">'z'</span>; a++)&#123;</span><br><span class="line">            String n = word.substring(<span class="number">0</span>, i) + a + word.substring(i + <span class="number">1</span>);</span><br><span class="line">            <span class="keyword">if</span>(dict.contains(n))&#123;</span><br><span class="line">                neighbors.add(n);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    map.put(word, neighbors);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最终完整的代码，并没有把邻接表构造出来，而是在while中利用了那种思想来找相邻的单词</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">ladderLength</span><span class="params">(String start, String end, Set&lt;String&gt; dict)</span> </span>&#123;</span><br><span class="line">    dict.add(start);</span><br><span class="line">    dict.add(end);</span><br><span class="line">    Queue&lt;String&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    queue.offer(start);</span><br><span class="line">    Set&lt;String&gt; set = <span class="keyword">new</span> HashSet&lt;&gt;();</span><br><span class="line">    set.add(start);</span><br><span class="line">    <span class="keyword">int</span> len = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size;i++)&#123;</span><br><span class="line">            String word = queue.poll();</span><br><span class="line">            <span class="keyword">if</span>(word.equals(end)) &#123;<span class="keyword">return</span> len;&#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; word.length(); j++)&#123;</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">char</span> a = <span class="string">'a'</span>; a &lt;= <span class="string">'z'</span>; a++)&#123;</span><br><span class="line">                    String newWord = word.substring(<span class="number">0</span>, j) + a + word.substring(j+<span class="number">1</span>);</span><br><span class="line">                    <span class="keyword">if</span>(!set.contains(newWord) &amp;&amp; dict.contains(newWord))&#123;</span><br><span class="line">                        queue.offer(newWord);</span><br><span class="line">                        set.add(newWord);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        len++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Follow Up: <a href="http://www.lintcode.com/en/problem/word-ladder-ii/" target="_blank" rel="noopener">Word Ladder ii</a> 要求找到所有的word ladder，则需要用DFS去搜索。在下节课会讲到</p>
+<h3 id="More-2"><a href="#More-2" class="headerlink" title="More"></a>More</h3><p><a href="http://www.lintcode.com/en/problem/build-post-office/" target="_blank" rel="noopener">Build Post Office</a><br><a href="http://www.lintcode.com/en/problem/build-post-office-ii/" target="_blank" rel="noopener">Build Post Office ii</a></p>
+<h1 id="矩阵上的宽搜"><a href="#矩阵上的宽搜" class="headerlink" title="矩阵上的宽搜"></a>矩阵上的宽搜</h1><p>矩阵实际上也是一种特殊的图，矩阵上的宽搜与图的宽搜的区别就在于：矩阵找邻居节点的时候不需要遍历一个neighbor，而是通过<code>(x, y)</code>加上坐标变换矩阵<code>[[0,1],[0,-1],[1,0],[-1,0]]</code>来计算的。 所以我们完全可以按照做图的宽搜的思路来做矩阵宽搜。</p>
+<p>矩阵宽搜问题的时间复杂度是<code>O(R * C)</code>， R是行数， C是列数。</p>
+<p>矩阵上的宽搜有一个问题是如何去重，如果我们用<code>int[]</code>数组来存储坐标的话，set就无法去重，因为set中存储的是数组的地址。一般来说我们都需要一个<code>boolean visited[][]</code>来记录是否访问到过</p>
+<h2 id="Example1-Zombie-in-Matrix"><a href="#Example1-Zombie-in-Matrix" class="headerlink" title="Example1: Zombie in Matrix"></a>Example1: Zombie in Matrix</h2><p><a href="http://www.lintcode.com/en/problem/zombie-in-matrix/" target="_blank" rel="noopener">Zombie in Matrix</a> 给了一个矩阵，其中有people, 有wall 有zombie。 zombie每天都可以把相邻的一个人变成zombie，问最少多少天可以把所有人变成zombie。 </p>
+<p>其实就是一个最短路径问题，我们是用层级遍历，先找到所有的zombie，每天把每一个zombie周围的人都变成zombie，然后再将这些点进入queue。循环结束时的层数就是需要的天数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> PEOPLE = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> ZOMBIE = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> WALL = <span class="number">2</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">zombie</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] directionX = &#123;<span class="number">0</span>, <span class="number">1</span>, -<span class="number">1</span>, <span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span>[] directionY = &#123;<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="comment">// 找到所有的zombie 和人的个数</span></span><br><span class="line">    <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line">    Queue&lt;<span class="keyword">int</span>[]&gt; zombies = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; grid.length; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; grid[i].length; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(grid[i][j] == ZOMBIE)&#123;</span><br><span class="line">                zombies.add(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i,j&#125;);</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(grid[i][j] == PEOPLE)&#123;</span><br><span class="line">                num++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> days = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(!zombies.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">int</span> size = zombies.size();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size;i++)&#123;</span><br><span class="line">            <span class="keyword">int</span>[] z = zombies.poll();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">4</span>; j++)&#123;</span><br><span class="line">                <span class="keyword">int</span> x = z[<span class="number">0</span>] + directionX[j];</span><br><span class="line">                <span class="keyword">int</span> y = z[<span class="number">1</span>] + directionY[j];</span><br><span class="line">                <span class="keyword">if</span>(inBound(x, y, grid) &amp;&amp; grid[x][y] == PEOPLE)&#123;</span><br><span class="line">                    grid[x][y] = ZOMBIE;</span><br><span class="line">                    System.out.println(<span class="string">"Day"</span> + days + <span class="string">"("</span> + x + <span class="string">","</span> + y + <span class="string">")"</span>);</span><br><span class="line">                    zombies.offer(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;x, y&#125;);</span><br><span class="line">                    num--;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        days++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(num == <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> days - <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">inBound</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span>[][] grid)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = grid.length;</span><br><span class="line">    <span class="keyword">int</span> m = grid[<span class="number">0</span>].length;</span><br><span class="line">    <span class="keyword">return</span> x &gt;= <span class="number">0</span> &amp;&amp; x &lt; n &amp;&amp; y &gt;= <span class="number">0</span> &amp;&amp; y &lt; m;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Example2-Knight-Shortest-Path"><a href="#Example2-Knight-Shortest-Path" class="headerlink" title="Example2: Knight Shortest Path"></a>Example2: Knight Shortest Path</h2><p><a href="http://www.lintcode.com/problem/knight-shortest-path/" target="_blank" rel="noopener">Knight shortest path</a> 这是一道简单图最短路径问题，规定骑士能走的方式，给定棋盘、起点和终点，求最短路径。其实也是一个和上题类似的层级遍历的问题，只不过想象这次zombie不再感染身边的人，而是按象棋中马的方式去感染，直到感染到目标位置的人。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">shortestPath</span><span class="params">(<span class="keyword">boolean</span>[][] grid, Point source, Point destination)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(grid == <span class="keyword">null</span> || grid.length == <span class="number">0</span> || grid[<span class="number">0</span>].length == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span>[] deltaX = &#123;<span class="number">1</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">2</span>, -<span class="number">1</span>, -<span class="number">1</span>, -<span class="number">2</span>, -<span class="number">2</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span>[] deltaY = &#123;<span class="number">2</span>, -<span class="number">2</span>, <span class="number">1</span>, -<span class="number">1</span>, <span class="number">2</span>, -<span class="number">2</span>, <span class="number">1</span>, -<span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span> m = grid.length;</span><br><span class="line">    <span class="keyword">int</span> n = grid[<span class="number">0</span>].length;</span><br><span class="line">    <span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line">    Queue&lt;Point&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    queue.offer(source);</span><br><span class="line">    grid[source.x][source.y] = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)&#123;</span><br><span class="line">            Point p = queue.poll();</span><br><span class="line">            <span class="keyword">if</span>(p.x == destination.x &amp;&amp; p.y == destination.y)&#123;</span><br><span class="line">                <span class="keyword">return</span> len;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">8</span>; j++)&#123;</span><br><span class="line">                Point newPoint = <span class="keyword">new</span> Point(p.x+deltaX[j], p.y+deltaY[j]);</span><br><span class="line">                <span class="keyword">if</span>(isValid(grid, newPoint))&#123;</span><br><span class="line">                    queue.offer(newPoint);</span><br><span class="line">                    <span class="comment">//System.out.println(newPoint.x + "," + newPoint.y);</span></span><br><span class="line">                    grid[newPoint.x][newPoint.y] = <span class="keyword">true</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        len++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(<span class="keyword">boolean</span>[][] grid, Point newPoint)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> x = newPoint.x;</span><br><span class="line">    <span class="keyword">int</span> y = newPoint.y;</span><br><span class="line">    <span class="keyword">if</span>(<span class="number">0</span> &lt;= x &amp;&amp; x &lt; grid.length &amp;&amp; <span class="number">0</span> &lt;= y &amp;&amp; y &lt; grid[<span class="number">0</span>].length)&#123;</span><br><span class="line">        <span class="keyword">return</span> !grid[x][y];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Example3-Build-Post-Office-ii"><a href="#Example3-Build-Post-Office-ii" class="headerlink" title="Example3: Build Post Office ii"></a>Example3: Build Post Office ii</h2><p><a href="http://www.lintcode.com/en/problem/build-post-office-ii/" target="_blank" rel="noopener">Build Post Office ii</a> </p>
+<p>乍一看的时候会觉得很难，但实际上就是多次利用宽度优先搜索，求多个最短路径。题目让求到所有房子距离之和最近的空地，我们会想到可以遍历每一个空地，求出它到所有房子的距离，然后累加到一个数组中，最后去找和最小的那个。</p>
+<p>或者我们可以倒过来想，遍历每一个房子，求出房子到所有空地的距离，将这个值累加到空地上，最后找出累加和最小的空地。</p>
+<p>下面是第二种思想的代码：（两种思想代码非常类似，运行时间也相差无几）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> WALL = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> HOUSE = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">int</span> EMPTY = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">shortestDistance</span><span class="params">(<span class="keyword">int</span>[][] grid)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 找到所有的house</span></span><br><span class="line">    <span class="keyword">int</span> numHouse = <span class="number">0</span>;</span><br><span class="line">    ArrayList&lt;<span class="keyword">int</span>[]&gt; house = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; grid.length; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; grid[<span class="number">0</span>].length; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(grid[i][j] == HOUSE)&#123;</span><br><span class="line">                house.add(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;i, j&#125;);</span><br><span class="line">                numHouse++;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 对于每个house进行一次dfs, 将房子到某一空地的距离加到distance中</span></span><br><span class="line">    <span class="keyword">int</span>[][] distance = <span class="keyword">new</span> <span class="keyword">int</span>[grid.length][grid[<span class="number">0</span>].length];</span><br><span class="line">    <span class="keyword">int</span>[][] reach = <span class="keyword">new</span> <span class="keyword">int</span>[grid.length][grid[<span class="number">0</span>].length];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span>[] loc: house)&#123;</span><br><span class="line">        dfs(loc[<span class="number">0</span>], loc[<span class="number">1</span>], distance, reach, grid);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 全部dfs之后，distance中最小的位置就是到所有房子距离最小的空地</span></span><br><span class="line">    <span class="keyword">int</span> min = Integer.MAX_VALUE;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i  &lt; grid.length; i++)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; grid[<span class="number">0</span>].length; j++)&#123;</span><br><span class="line">            <span class="keyword">if</span>(grid[i][j] == EMPTY &amp;&amp; reach[i][j] == numHouse)&#123;</span><br><span class="line">                min = Math.min(distance[i][j], min);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(min == Integer.MAX_VALUE)&#123;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> min;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">dfs</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span>[][] distance, <span class="keyword">int</span>[][] reach, <span class="keyword">int</span>[][] grid)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span>[] deltaX = &#123;<span class="number">0</span> , <span class="number">0</span> , -<span class="number">1</span>, <span class="number">1</span>&#125;;</span><br><span class="line">    <span class="keyword">int</span>[] deltaY = &#123;<span class="number">1</span>, -<span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>&#125;;</span><br><span class="line">    Queue&lt;<span class="keyword">int</span>[]&gt; queue = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">    <span class="keyword">boolean</span>[][] isVisited = <span class="keyword">new</span> <span class="keyword">boolean</span>[grid.length][grid[<span class="number">0</span>].length];</span><br><span class="line">    queue.offer(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;x, y&#125;);</span><br><span class="line">    <span class="keyword">int</span> level = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(!queue.isEmpty())&#123;</span><br><span class="line">        <span class="keyword">int</span> size = queue.size();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span>[] loc = queue.poll();</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">4</span>; j++)&#123;</span><br><span class="line">                <span class="keyword">int</span> newx = loc[<span class="number">0</span>] + deltaX[j];</span><br><span class="line">                <span class="keyword">int</span> newy = loc[<span class="number">1</span>] + deltaY[j];</span><br><span class="line">                <span class="keyword">if</span>(inBound(newx, newy, grid) &amp;&amp; grid[newx][newy] == EMPTY &amp;&amp; !isVisited[newx][newy])&#123;</span><br><span class="line">                    isVisited[newx][newy] = <span class="keyword">true</span>;</span><br><span class="line">                    queue.add(<span class="keyword">new</span> <span class="keyword">int</span>[]&#123;newx, newy&#125;);</span><br><span class="line">                    distance[newx][newy] += level;</span><br><span class="line">                    reach[newx][newy] ++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        level++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">inBound</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span>[][] grid)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> m = grid.length;</span><br><span class="line">    <span class="keyword">int</span> n = grid[<span class="number">0</span>].length;</span><br><span class="line">    <span class="keyword">return</span> x &gt;= <span class="number">0</span> &amp;&amp; x &lt; m &amp;&amp; y &gt;= <span class="number">0</span> &amp;&amp; y &lt; n;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LintCode/" rel="tag"><i class="fa fa-tag"></i> LintCode</a>
+          
+            <a href="/tags/NineChapter/" rel="tag"><i class="fa fa-tag"></i> NineChapter</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/01/Algorithms/九章-二叉树与分治法/" rel="next" title="九章-二叉树与分治算法">
+                <i class="fa fa-chevron-left"></i> 九章-二叉树与分治算法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/mine.jpg"
+                alt="XuyangBai" />
+            
+              <p class="site-author-name" itemprop="name">XuyangBai</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XuyangBai" target="_blank" title="Github">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Github</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.linkedin.com/in/%E6%97%AD%E9%98%B3-%E7%99%BD-419369140/" target="_blank" title="Linkedin">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Linkedin</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#宽度优先搜索-BFS"><span class="nav-number">1.</span> <span class="nav-text">宽度优先搜索 BFS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是宽度优先搜索"><span class="nav-number">1.1.</span> <span class="nav-text">什么是宽度优先搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么时候应该使用BFS"><span class="nav-number">1.2.</span> <span class="nav-text">什么时候应该使用BFS?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#宽搜的时间复杂度"><span class="nav-number">1.3.</span> <span class="nav-text">宽搜的时间复杂度</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#二叉树上的宽搜"><span class="nav-number">2.</span> <span class="nav-text">二叉树上的宽搜</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example-Binary-Tree-Level-Order-Traversal"><span class="nav-number">2.1.</span> <span class="nav-text">Example: Binary Tree Level Order Traversal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example2-Binary-Tree-Zigzag-Order-Traversal"><span class="nav-number">2.2.</span> <span class="nav-text">Example2: Binary Tree Zigzag Order Traversal</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#More"><span class="nav-number">2.3.</span> <span class="nav-text">More</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图上的宽搜"><span class="nav-number">3.</span> <span class="nav-text">图上的宽搜</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#由点及面"><span class="nav-number">3.1.</span> <span class="nav-text">由点及面</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Example1-Graph-Valid-Tree"><span class="nav-number">3.1.1.</span> <span class="nav-text">Example1: Graph Valid Tree</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example2-Clone-Graph"><span class="nav-number">3.1.2.</span> <span class="nav-text">Example2: Clone Graph</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#拓扑排序"><span class="nav-number">3.2.</span> <span class="nav-text">拓扑排序</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Example1：Topological-Sorting"><span class="nav-number">3.2.1.</span> <span class="nav-text">Example1：Topological Sorting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Example2-Course-Schedule"><span class="nav-number">3.2.2.</span> <span class="nav-text">Example2 : Course Schedule</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#More-1"><span class="nav-number">3.2.3.</span> <span class="nav-text">More</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#求最短路径"><span class="nav-number">3.3.</span> <span class="nav-text">求最短路径</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Example1-Word-Ladder"><span class="nav-number">3.3.1.</span> <span class="nav-text">Example1: Word Ladder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#More-2"><span class="nav-number">3.3.2.</span> <span class="nav-text">More</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#矩阵上的宽搜"><span class="nav-number">4.</span> <span class="nav-text">矩阵上的宽搜</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Example1-Zombie-in-Matrix"><span class="nav-number">4.1.</span> <span class="nav-text">Example1: Zombie in Matrix</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example2-Knight-Shortest-Path"><span class="nav-number">4.2.</span> <span class="nav-text">Example2: Knight Shortest Path</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Example3-Build-Post-Office-ii"><span class="nav-number">4.3.</span> <span class="nav-text">Example3: Build Post Office ii</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XuyangBai</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+<span class="post-meta-divider">|</span>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("uFLr00lMNa5H9BGnQpg2Oq9p-gzGzoHsz", "dwYpENeLoJzOf7Xx4pMlY5BE");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
