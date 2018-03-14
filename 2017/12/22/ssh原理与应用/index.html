@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="Xuyang">
 <meta property="og:description" content="ssh原理与应用简介What 什么是sshSecure Shell(SSH) is a cryptographic network protocal for operating network services securely over an unsecured network. The best known example application is for remote login to">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-19T05:49:32.903Z">
+<meta property="og:updated_time" content="2018-03-13T02:39:28.662Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ssh原理与应用">
 <meta name="twitter:description" content="ssh原理与应用简介What 什么是sshSecure Shell(SSH) is a cryptographic network protocal for operating network services securely over an unsecured network. The best known example application is for remote login to">
@@ -346,7 +346,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,386
+                  1,381
                 </span>
               
 
@@ -392,30 +392,12 @@
 </ul>
 <p>以下是具体操作步骤</p>
 <ol>
-<li>在服务器（Ubuntu）上安装git</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br></pre></td></tr></table></figure>
-<ol>
-<li>创建一个git用户用来运行git服务</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo adduser git</span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>创建证书登录</p>
-<p>收集需要登录的用户的公钥（<code>id_rsa.pub</code> 可使用ssh-keygen来生成），把公钥导入到/home/git/.ssh/authorized_keys 文件中，如果不存在.ssh文件夹的话需要创建一个</p>
-</li>
-<li><p>初始化git仓库</p>
-<p>选定一个目录作为git仓库 例如在/home/ubuntu下执行</p>
-</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo git init --bare sample.git</span><br></pre></td></tr></table></figure>
-<p>   Git就会创建一个名为sample.git的文件夹, 也是一个裸仓库，<strong>裸仓库没有工作区</strong>，因为服务器上的Git仓库纯粹是为了共享，所以不让用户直接登录到服务器上去改工作区，并且服务器上的Git仓库通常都以<code>.git</code>结尾。然后，把owner改为<code>git</code>：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo chown -R git:git sample.git</span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>禁用shell登录</p>
-<p>处于安全考虑, 创建的git用户不允许登录shell，这可以通过编辑<code>/etc/passwd</code>文件完成。找到类似下面的一行<br><code>git:x:1001:1001:,,,:/home/git:/bin/bash</code> 改为<code>git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell</code><br>这样，<code>git</code>用户可以正常通过ssh使用git，但无法登录shell，因为我们为<code>git</code>用户指定的<code>git-shell</code>每次一登录就自动退出</p>
-</li>
-<li><p>这样就大功告成了，可以在客户端上使用<code>git clone git@server_ip:/home/ubuntu/sample.git</code>操作来克隆代码库（会提示是个空的库），之后就和正常的操作一样啦。 </p>
-</li>
+<li>在服务器（Ubuntu）上安装git: <code>sudo apt-get install git</code></li>
+<li>创建一个git用户用来运行git服务: <code>sudo adduser git</code></li>
+<li>创建证书登录:   收集需要登录的用户的公钥（<code>id_rsa.pub</code> 可使用ssh-keygen来生成），把公钥导入到/home/git/.ssh/authorized_keys 文件中，如果不存在.ssh文件夹的话需要创建一个</li>
+<li>初始化git仓库: 选定一个目录作为git仓库 例如在/home/ubuntu下执行<code>sudo git init --bare sample.git</code>,  Git就会创建一个名为sample.git的文件夹, 也是一个裸仓库，<strong>裸仓库没有工作区</strong>，因为服务器上的Git仓库纯粹是为了共享，所以不让用户直接登录到服务器上去改工作区，并且服务器上的Git仓库通常都以<code>.git</code>结尾。然后，把owner改为<code>git</code>：<code>sudo chown -R git:git sample.git</code></li>
+<li>禁用shell登录: 处于安全考虑, 创建的git用户不允许登录shell，这可以通过编辑<code>/etc/passwd</code>文件完成。找到类似下面的一行<code>git:x:1001:1001:,,,:/home/git:/bin/bash</code> 改为<code>git:x:1001:1001:,,,:/home/git:/usr/bin/git-shell</code> 这样，<code>git</code>用户可以正常通过ssh使用git，但无法登录shell，因为我们为<code>git</code>用户指定的<code>git-shell</code>每次一登录就自动退出</li>
+<li>这样就大功告成了，可以在客户端上使用<code>git clone git@server_ip:/home/ubuntu/sample.git</code>操作来克隆代码库（会提示是个空的库），之后就和正常的操作一样啦。 </li>
 </ol>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a href="https://www.ssh.com/attack/man-in-the-middle" target="_blank" rel="noopener">https://www.ssh.com/attack/man-in-the-middle</a><br><a href="http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2011/12/ssh_remote_login.html</a></p>
 
@@ -539,7 +521,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">31</span>
+                  <span class="site-state-item-count">32</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
