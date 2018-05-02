@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="CSAPP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从17年的12月到18年4月，大概花了五个月时间读完了《深入理解计算机系统》这本书，也跟着做完了配套的实验，这些实验设计的精妙让我不由得想要花时间去完成它，并享受完成之后的成就感。通过这本书，对CMU这所CS最顶尖的学府的敬佩油然而生，本科生的一个入门课程就能做到如此全面地梳理计算机的系统，让我们清楚地了解一个程序是如">
+<meta name="keywords" content="CSAPP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSAPP系列总结">
+<meta property="og:url" content="http://yoursite.com/2018/04/19/CSAPP/CSAPP系列总结/index.html">
+<meta property="og:site_name" content="Xuyang">
+<meta property="og:description" content="从17年的12月到18年4月，大概花了五个月时间读完了《深入理解计算机系统》这本书，也跟着做完了配套的实验，这些实验设计的精妙让我不由得想要花时间去完成它，并享受完成之后的成就感。通过这本书，对CMU这所CS最顶尖的学府的敬佩油然而生，本科生的一个入门课程就能做到如此全面地梳理计算机的系统，让我们清楚地了解一个程序是如何被计算机理解并运行起来的，相比之前我们学过的很多课程往往过于关注知识本身，而忽">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/CSAPP/CSAPP.png">
+<meta property="og:updated_time" content="2018-05-02T01:05:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSAPP系列总结">
+<meta name="twitter:description" content="从17年的12月到18年4月，大概花了五个月时间读完了《深入理解计算机系统》这本书，也跟着做完了配套的实验，这些实验设计的精妙让我不由得想要花时间去完成它，并享受完成之后的成就感。通过这本书，对CMU这所CS最顶尖的学府的敬佩油然而生，本科生的一个入门课程就能做到如此全面地梳理计算机的系统，让我们清楚地了解一个程序是如何被计算机理解并运行起来的，相比之前我们学过的很多课程往往过于关注知识本身，而忽">
+<meta name="twitter:image" content="http://yoursite.com/images/CSAPP/CSAPP.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/19/CSAPP/CSAPP系列总结/"/>
+
+
+
+
+
+  <title>CSAPP系列总结 | Xuyang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xuyang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">读书，交友，爱，思考</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/19/CSAPP/CSAPP系列总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XuyangBai">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/mine.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xuyang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CSAPP系列总结</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-19T22:59:35+08:00">
+                2018-04-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/厚积薄发/" itemprop="url" rel="index">
+                    <span itemprop="name">厚积薄发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/04/19/CSAPP/CSAPP系列总结/" class="leancloud_visitors" data-flag-title="CSAPP系列总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+		 <span>°C</span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,814
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>从17年的12月到18年4月，大概花了五个月时间读完了《深入理解计算机系统》这本书，也跟着做完了配套的实验，这些实验设计的精妙让我不由得想要花时间去完成它，并享受完成之后的成就感。通过这本书，对CMU这所CS最顶尖的学府的敬佩油然而生，本科生的一个入门课程就能做到如此<strong>全面</strong>地梳理计算机的系统，让我们清楚地了解一个程序是如何被计算机理解并运行起来的，相比之前我们学过的很多课程往往过于关注知识本身，而忽视了为我们构建一个整体的结构图，脑子里只有一些孤立的知识点，而读了CSAPP之后，这些孤立的知识点才慢慢得连起来，构成了一个完整的计算机系统。这个过程中虽然很多次有过懈怠，想要放弃，但是很庆幸还是坚持了下来。</p>
+<a id="more"></a>
+<p><img src="/images/CSAPP/CSAPP.png" alt="CSAPP"></p>
+<h1 id="程序结构和执行"><a href="#程序结构和执行" class="headerlink" title="程序结构和执行"></a>程序结构和执行</h1><p>这一部分主要讲解计算机如何表示和执行应用程序，如何表示整数和浮点数？如何进行整数和实数的运算？ 如何将C语言程序翻译成机器可以阅读的指令？ 了解了这些我们就能编写出高效的、且不会出现算术错误的C语言程序。</p>
+<h2 id="信息的表示和处理"><a href="#信息的表示和处理" class="headerlink" title="信息的表示和处理"></a>信息的表示和处理</h2><ol>
+<li>计算机内部如何编码整数、浮点数</li>
+<li>为什么要引入补码？</li>
+<li>如何进行无符号整数与有符号整数之间的类型转换</li>
+<li>常用的位运算</li>
+<li>浮点数运算的精度问题</li>
+</ol>
+<p>配套<a href="http://xuyangbai.github.io//2018/01/19/CSAPP/Data_Lab/" target="_blank" rel="noopener">Data Lab</a>，一些要求只用位运算来完成的任务，还会限制运算的次数，有些需要非常巧妙的做法才能完成，做的时候也让我对整数、浮点数的表示有了非常深刻的印象和理解。</p>
+<h2 id="程序的机器级表示"><a href="#程序的机器级表示" class="headerlink" title="程序的机器级表示"></a>程序的机器级表示</h2><ol>
+<li>基本的汇编语法，常见的寻址方式和运算方式</li>
+<li>条件结构(if switch)的实现方式</li>
+<li>循环结构(for,while, do while)的实现方式</li>
+<li><strong>栈帧结构，函数调用以及递归的实现</strong></li>
+<li>多维数组、结构体的存储</li>
+<li>缓冲区溢出</li>
+</ol>
+<p>配套<a href="http://xuyangbai.github.io//2018/01/29/CSAPP/Bomb_Lab/" target="_blank" rel="noopener">Bomb Lab</a> 和<a href="">Attack Lab</a>, bomb lab主要让我们通过对汇编程序的理解去推测不会触发“炸弹”的输入，非常有趣的一个实验，一关一关破解的感觉非常爽，有时候还可以通过自己的代码直觉猜出来(当我猜到第五个关卡是一段二分法的代码的时候巨激动)，需要我们对比较与跳转指令比较熟悉，且要会使用gdb。 attack lab则是分别让我们完成三种类型的攻击(缓冲区溢出攻击、返回导向性ROP攻击)，需要我们对<strong>栈帧结构和过程调用</strong>有很深的理解，这个也是我第一次想放弃的一个节点，后来又回过头把过程调用部分的内容读了读才算是磕磕绊绊地解决了这个实验。</p>
+<h2 id="存储器层次结构"><a href="#存储器层次结构" class="headerlink" title="存储器层次结构"></a>存储器层次结构</h2><ol>
+<li>局部性原理、存储器的思想</li>
+<li>计算机中的存储体系（寄存器-高速缓存-主存-本地磁盘-远程存储）</li>
+<li>高速缓存(Cache)的结构，读取、写入的过程</li>
+<li>如何利用高速缓存来编写高效的代码</li>
+</ol>
+<p><a href="http://xuyangbai.github.io//2018/02/27/CSAPP/Cache_Lab/" target="_blank" rel="noopener">Cache Lab</a> 实验分为两部分，第一部分是实现一个缓存模拟器，根据给定的trace文件来输出对应的操作，只要理解了cache的结构，这部分还是很好做的。第二部分是利用缓存机制加速矩阵的运算。</p>
+<h1 id="在系统上运行程序"><a href="#在系统上运行程序" class="headerlink" title="在系统上运行程序"></a>在系统上运行程序</h1><h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><ol>
+<li>从源代码到计算机可执行的二进制代码之间需要经过的处理</li>
+<li>理解编译过程</li>
+<li>理解链接过程</li>
+<li>理解静态库、动态库的使用方式</li>
+</ol>
+<p>这部分没有lab的支持所以理解不是很深，有机会还要再读读。</p>
+<h2 id="异常控制流"><a href="#异常控制流" class="headerlink" title="异常控制流"></a>异常控制流</h2><ol>
+<li>异常的分类与概念， (中断、陷阱、故障、终止)</li>
+<li>Linux的进程控制机制，与进程相关的一些函数</li>
+<li>信号的基本原理、与信号相关的函数、如何自定义信号处理函数</li>
+</ol>
+<p>这部分主要讲解了异常控制流的几个基本机制: 异常、进程切换、信号和非本地跳转，涉及到的概念比较多。 配套实验<a href="http://xuyangbai.github.io//2018/03/14/CSAPP/Shell_Lab/" target="_blank" rel="noopener">Shell Lab</a>要我们自己实现一个shell，支持内置命令和可执行程序，支持后台运行和前台运行，能够捕获ctrl c和ctrl z的输入。这个实验也让我对shell背后所隐含的进程管理、异常控制等都有了更深的理解。</p>
+<h2 id="虚拟存储器"><a href="#虚拟存储器" class="headerlink" title="虚拟存储器"></a>虚拟存储器</h2><p>我们内存往往很小，但是为什么能够同时运行很多个比较大的进程而且进程可以拥有自己连续的地址空间呢？ 这时候虚拟存储器就派上用场了。虚拟存储器是指具有请求调入功能和置换功能、能从逻辑上对内存容量加以扩充的一种存储器系统。</p>
+<ol>
+<li>虚拟存储器的作用（缓存工具、内存管理工具、内存保护工具)</li>
+<li>从虚拟地址到物理地址的转换</li>
+<li><strong>动态内存分配</strong></li>
+<li>垃圾回收机制</li>
+<li>内存陷阱(使用内存时应该避免的问题)</li>
+</ol>
+<p><a href="">Malloc Lab</a> 需要自己实现一个动态分配器，要兼顾空间使用率以及吞吐量。free block有多种组织方式 显式空闲链表、隐式空闲链表、分离空闲链表。扫描free block也有首次适应、下次适应、最佳适应三种策略。思路比较好理解，但是写代码的时候会遇到很多问题，segment fault层出不穷，需要借助gdb、并自己编写checkheap函数来帮助实现</p>
+<h1 id="程序之间的交互"><a href="#程序之间的交互" class="headerlink" title="程序之间的交互"></a>程序之间的交互</h1><h2 id="系统级IO"><a href="#系统级IO" class="headerlink" title="系统级IO"></a>系统级IO</h2><ol>
+<li>文件的打开与关闭、文件读写</li>
+<li>RIO包的使用</li>
+<li>共享文件</li>
+</ol>
+<h2 id="网络编程"><a href="#网络编程" class="headerlink" title="网络编程"></a>网络编程</h2><ol>
+<li>网络的基本架构</li>
+<li>常见的网络协议（TCP IP HTTP）</li>
+<li>Socket接口</li>
+<li>客户端-服务器 结构</li>
+</ol>
+<h2 id="并行与同步"><a href="#并行与同步" class="headerlink" title="并行与同步"></a>并行与同步</h2><ol>
+<li>理解并行的几个层次: 进程、事件、线程</li>
+<li>使用<code>pthread.h</code>中的函数编写多线程程序</li>
+<li>用信号量解决同步问题， 生产者-消费者问题、 读者-写者问题</li>
+<li>线程安全和一致性问题</li>
+</ol>
+<p>配套实验<a href="http://xuyangbai.github.io/2018/04/17/CSAPP/Proxy_Lab/" target="_blank" rel="noopener">proxy lab</a>, 最后一个实验，要我们自己来实现一个代理服务器，要求支持并发、有缓存功能，代理服务器作为客户端和服务器的中间人，对能帮助我们更好得理解客户端和服务器的工作机制。难点在写出来的代理服务器要足够robust，能应对各种异常情况而不崩溃。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CSAPP/" rel="tag"><i class="fa fa-tag"></i> CSAPP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/17/CSAPP/Proxy_Lab/" rel="next" title="CSAPP-Proxy Lab">
+                <i class="fa fa-chevron-left"></i> CSAPP-Proxy Lab
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/mine.jpg"
+                alt="XuyangBai" />
+            
+              <p class="site-author-name" itemprop="name">XuyangBai</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XuyangBai" target="_blank" title="Github">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Github</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.linkedin.com/in/%E6%97%AD%E9%98%B3-%E7%99%BD-419369140/" target="_blank" title="Linkedin">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Linkedin</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#程序结构和执行"><span class="nav-number">1.</span> <span class="nav-text">程序结构和执行</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#信息的表示和处理"><span class="nav-number">1.1.</span> <span class="nav-text">信息的表示和处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#程序的机器级表示"><span class="nav-number">1.2.</span> <span class="nav-text">程序的机器级表示</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#存储器层次结构"><span class="nav-number">1.3.</span> <span class="nav-text">存储器层次结构</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在系统上运行程序"><span class="nav-number">2.</span> <span class="nav-text">在系统上运行程序</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#链接"><span class="nav-number">2.1.</span> <span class="nav-text">链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常控制流"><span class="nav-number">2.2.</span> <span class="nav-text">异常控制流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟存储器"><span class="nav-number">2.3.</span> <span class="nav-text">虚拟存储器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#程序之间的交互"><span class="nav-number">3.</span> <span class="nav-text">程序之间的交互</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#系统级IO"><span class="nav-number">3.1.</span> <span class="nav-text">系统级IO</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络编程"><span class="nav-number">3.2.</span> <span class="nav-text">网络编程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#并行与同步"><span class="nav-number">3.3.</span> <span class="nav-text">并行与同步</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XuyangBai</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+<span class="post-meta-divider">|</span>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("uFLr00lMNa5H9BGnQpg2Oq9p-gzGzoHsz", "dwYpENeLoJzOf7Xx4pMlY5BE");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>

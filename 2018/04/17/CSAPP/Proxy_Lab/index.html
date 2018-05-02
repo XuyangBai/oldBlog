@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="CSAPP," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本实验要求实现一个带有缓存功能的支持并发的Proxy代理服务器。">
+<meta name="keywords" content="CSAPP">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSAPP-Proxy Lab">
+<meta property="og:url" content="http://yoursite.com/2018/04/17/CSAPP/Proxy_Lab/index.html">
+<meta property="og:site_name" content="Xuyang">
+<meta property="og:description" content="本实验要求实现一个带有缓存功能的支持并发的Proxy代理服务器。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/images/CSAPP/socket.JPG">
+<meta property="og:updated_time" content="2018-05-02T01:04:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CSAPP-Proxy Lab">
+<meta name="twitter:description" content="本实验要求实现一个带有缓存功能的支持并发的Proxy代理服务器。">
+<meta name="twitter:image" content="http://yoursite.com/images/CSAPP/socket.JPG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/17/CSAPP/Proxy_Lab/"/>
+
+
+
+
+
+  <title>CSAPP-Proxy Lab | Xuyang</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Xuyang</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">读书，交友，爱，思考</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/17/CSAPP/Proxy_Lab/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="XuyangBai">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/mine.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Xuyang">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">CSAPP-Proxy Lab</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-17T22:59:35+08:00">
+                2018-04-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/厚积薄发/" itemprop="url" rel="index">
+                    <span itemprop="name">厚积薄发</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/04/17/CSAPP/Proxy_Lab/" class="leancloud_visitors" data-flag-title="CSAPP-Proxy Lab">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">热度&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+		 <span>°C</span>
+             </span>
+          
+
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,940
+                </span>
+              
+
+              
+
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本实验要求实现一个带有缓存功能的支持并发的Proxy代理服务器。</p>
+<a id="more"></a>
+<h1 id="Level1-Sequential-Web-Proxy"><a href="#Level1-Sequential-Web-Proxy" class="headerlink" title="Level1: Sequential Web Proxy"></a>Level1: Sequential Web Proxy</h1><p>第一部分只要求实现一个简单的代理服务器，能满足的功能为</p>
+<ol>
+<li>用户给定一个端口，proxy监听所有从该端口进入的请求（main）</li>
+<li>获取到http请求之后(doit)，解析请求（parse_uri），构造http请求头（build_http_header）转发到服务器端(doit)</li>
+<li>将从服务器端获取到的响应返回给客户端(doit)</li>
+</ol>
+<p>以下是上述几个函数的实现</p>
+<h2 id="main"><a href="#main" class="headerlink" title="main"></a>main</h2><p>main函数中监听port端口，接收来自客户端的请求，调用<code>doit</code>函数来处理请求</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> listenfd, connfd;</span><br><span class="line">    <span class="keyword">char</span> hostname[MAXLINE], port[MAXLINE];</span><br><span class="line">    <span class="keyword">socklen_t</span> clientlen;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sockaddr_storage</span> <span class="title">clientaddr</span>;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">/* check command line args*/</span></span><br><span class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span>) &#123;</span><br><span class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"usage :%s &lt;port&gt; \n"</span>, argv[<span class="number">0</span>]);</span><br><span class="line">        <span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    listenfd = Open_listenfd(argv[<span class="number">1</span>]);</span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        clientlen = <span class="keyword">sizeof</span>(clientaddr);</span><br><span class="line">        connfd = Accept(listenfd, (SA *) &amp;clientaddr, &amp;clientlen);</span><br><span class="line"></span><br><span class="line">        Getnameinfo((SA *) &amp;clientaddr, clientlen, hostname, MAXLINE, port, MAXLINE, <span class="number">0</span>);</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"Accepted connection from (%s %s).\n"</span>, hostname, port);</span><br><span class="line"></span><br><span class="line">        <span class="comment">/*sequential handle the client transaction*/</span></span><br><span class="line">        doit(connfd);</span><br><span class="line">        Close(connfd);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的main函数与客户端创建连接的过程其实与实验指导中提供的tiny web代码是完全一样的，但是doit要做的事情不一样，对于tiny web是要根据http请求返回对应的静态资源或者动态内容，而对于proxy则是要将http请求转发到host服务器去.</p>
+<p>其中需要关注的一个函数getaddrinfo和getnameinfo，这个函数在csapp书第三版中新出现的。</p>
+<blockquote>
+<p><code>getaddrinfo</code>能够将传入的用String变量代表的 hostnames、 host addresses、 service names和port number等转换成为socket address structure。它代替了原来的<code>geihostbyname</code>和<code>getservbyname</code>。该函数是线程安全的，并且是可重入的函数，而且该函数与协议无关。<code>getnameinfo</code>函数是<code>getaddrinfo</code>函数的逆函数，功能恰好相反</p>
+</blockquote>
+<p>getnameinfo函数的声明如下，输入的是socket addr，输出是host和port:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">getnameinfo</span><span class="params">(<span class="keyword">const</span> SA *sa, <span class="keyword">socklen_t</span> salen, <span class="comment">/* In: socket addr */</span></span></span></span><br><span class="line"><span class="function"><span class="params">                <span class="keyword">char</span> *host, <span class="keyword">size_t</span> hostlen,    <span class="comment">/* Out: host */</span></span></span></span><br><span class="line"><span class="function"><span class="params">                <span class="keyword">char</span> *serv, <span class="keyword">size_t</span> servlen,    <span class="comment">/* Out: service */</span></span></span></span><br><span class="line"><span class="function"><span class="params">                <span class="keyword">int</span> flags)</span></span>;                    <span class="comment">/* optional flags */</span></span><br></pre></td></tr></table></figure>
+<h2 id="doit"><a href="#doit" class="headerlink" title="doit"></a>doit</h2><p>doit函数处理一个HTTP事物，它要做的内容就是，包括解析从客户端传来的http请求，构建出新的http请求头并转发到服务器中去。代码实现如下，其中<code>parse_uri</code>和<code>build_http_header</code>两个函数分别实现解析uri和构建http请求头的功能。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">doit</span><span class="params">(<span class="keyword">int</span> connfd)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> serverfd;</span><br><span class="line">    <span class="keyword">char</span> buf[MAXLINE], method[MAXLINE], uri[MAXLINE], version[MAXLINE];</span><br><span class="line">    <span class="keyword">char</span> server_http_header[MAXLINE];</span><br><span class="line">    <span class="keyword">char</span> hostname[MAXLINE], path[MAXLINE];</span><br><span class="line">    <span class="keyword">int</span> port;</span><br><span class="line"></span><br><span class="line">    rio_t rio, server_rio;</span><br><span class="line"></span><br><span class="line">    Rio_readinitb(&amp;rio, connfd);</span><br><span class="line">    Rio_readlineb(&amp;rio, buf, MAXLINE); <span class="comment">// 读来自客户端的http请求</span></span><br><span class="line">    sscanf(buf, <span class="string">"%s %s %s"</span>, method, uri, version);  <span class="comment">// 将读取到的请求行分离</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(strcasecmp(method, <span class="string">"GET"</span>))&#123;</span><br><span class="line">        printf(<span class="string">"Proxy does not implement the method"</span>);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 解析uri, 并将解析结果存入hostname path port中</span></span><br><span class="line">    parse_uri(uri, hostname, path, &amp;port);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构建发送给服务器的请求头</span></span><br><span class="line">    build_http_header(server_http_header, hostname, path, port, &amp;rio);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 连接服务器</span></span><br><span class="line">	<span class="keyword">char</span> portStr[<span class="number">100</span>];</span><br><span class="line">	sprintf(portStr, <span class="string">"%d"</span>, port);</span><br><span class="line">	serverfd = Open_clientfd(hostname, portStr);</span><br><span class="line">	<span class="keyword">if</span> (serverfd &lt; <span class="number">0</span>) &#123;</span><br><span class="line">	    printf(<span class="string">"connection failed\n"</span>);</span><br><span class="line">	    <span class="keyword">return</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 向服务器发送http request</span></span><br><span class="line">    Rio_readinitb(&amp;server_rio, serverfd);</span><br><span class="line">    Rio_writen(serverfd, server_http_header, strlen(server_http_header));</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 接收服务器发回的响应，转发给客户端</span></span><br><span class="line">    size_t n;</span><br><span class="line">    <span class="keyword">while</span> ((n = Rio_readlineb(&amp;server_rio, buf, MAXLINE)) != <span class="number">0</span>) &#123;</span><br><span class="line">        printf(<span class="string">"proxy received %d bytes,then send\n"</span>, n);</span><br><span class="line">        Rio_writen(connfd, buf, n);</span><br><span class="line">    &#125;</span><br><span class="line">    Close(serverfd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="parse-uri"><a href="#parse-uri" class="headerlink" title="parse_uri"></a>parse_uri</h2><p>解析uri函数， 解析结果存储在hostname,path, port中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">parse_uri</span><span class="params">(<span class="keyword">char</span> *uri, <span class="keyword">char</span> *hostname, <span class="keyword">char</span> *path, <span class="keyword">int</span> *port)</span> </span>&#123;</span><br><span class="line">    *port = <span class="number">80</span>;</span><br><span class="line">    <span class="keyword">char</span> *pos = strstr(uri, <span class="string">"//"</span>);</span><br><span class="line"></span><br><span class="line">    pos = pos != NULL ? pos + <span class="number">2</span> : uri;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">char</span> *pos2 = strstr(pos, <span class="string">":"</span>);</span><br><span class="line">    <span class="keyword">if</span> (pos2 != NULL) &#123;</span><br><span class="line">        *pos2 = <span class="string">'\0'</span>;</span><br><span class="line">        sscanf(pos, <span class="string">"%s"</span>, hostname);</span><br><span class="line">        sscanf(pos2 + <span class="number">1</span>, <span class="string">"%d%s"</span>, port, path);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        pos2 = strstr(pos, <span class="string">"/"</span>);</span><br><span class="line">        <span class="keyword">if</span> (pos2 != NULL) &#123;</span><br><span class="line">            *pos2 = <span class="string">'\0'</span>;</span><br><span class="line">            sscanf(pos, <span class="string">"%s"</span>, hostname);</span><br><span class="line">            *pos2 = <span class="string">'/'</span>;</span><br><span class="line">            sscanf(pos2, <span class="string">"%s"</span>, path);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            sscanf(pos, <span class="string">"%s"</span>, hostname);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="build-http-header"><a href="#build-http-header" class="headerlink" title="build_http_header"></a>build_http_header</h2><p>由于http请求每一行都以<code>&#39;\r&#39;n&#39;</code>结尾，整个http请求都是以一个空行为结束。 所以我们可以每次读入一行，将读取到的内容与我们预先定义好的一些header key相匹配，即可处理http请求的header<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">build_http_header</span><span class="params">(<span class="keyword">char</span> *http_header, <span class="keyword">char</span> *hostname, <span class="keyword">char</span> *path, <span class="keyword">int</span> port, <span class="keyword">rio_t</span> *client_rio)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *conn_hdr = <span class="string">"Connection: close\r\n"</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *prox_hdr = <span class="string">"Proxy-Connection: close\r\n"</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *host_hdr_format = <span class="string">"Host: %s\r\n"</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *request_hdr_format = <span class="string">"GET %s HTTP/1.0\r\n"</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *endof_hdr = <span class="string">"\r\n"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *connection_key = <span class="string">"Connection"</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *user_agent_key = <span class="string">"User-Agent"</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *proxy_connection_key = <span class="string">"Proxy-Connection"</span>;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">char</span> *host_key = <span class="string">"Host"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">char</span> buf[MAXLINE], request_hdr[MAXLINE], other_hdr[MAXLINE], host_hdr[MAXLINE];</span><br><span class="line">    <span class="comment">// 构建http request的第一行 e.g: GET /index.html HTTP/1.0</span></span><br><span class="line">    <span class="built_in">sprintf</span>(request_hdr, request_hdr_format, path);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 处理每一条header字段</span></span><br><span class="line">    <span class="keyword">while</span> (Rio_readlineb(client_rio, buf, MAXLINE) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">strcmp</span>(buf, endof_hdr) == <span class="number">0</span>) <span class="keyword">break</span>; <span class="comment">/*结束行*/</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!strncasecmp(buf, host_key, <span class="built_in">strlen</span>(host_key)))<span class="comment">/*Host:*/</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="built_in">strcpy</span>(host_hdr, buf);</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (!strncasecmp(buf, connection_key, <span class="built_in">strlen</span>(connection_key))</span><br><span class="line">            &amp;&amp; !strncasecmp(buf, proxy_connection_key, <span class="built_in">strlen</span>(proxy_connection_key))</span><br><span class="line">            &amp;&amp; !strncasecmp(buf, user_agent_key, <span class="built_in">strlen</span>(user_agent_key))) &#123;</span><br><span class="line">            <span class="built_in">strcat</span>(other_hdr, buf);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strlen</span>(host_hdr) == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">sprintf</span>(host_hdr, host_hdr_format, hostname);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 所有连在一起构成完整的header</span></span><br><span class="line">    <span class="built_in">sprintf</span>(http_header, <span class="string">"%s%s%s%s%s%s%s"</span>,</span><br><span class="line">            request_hdr,</span><br><span class="line">            host_hdr,</span><br><span class="line">            conn_hdr,</span><br><span class="line">            prox_hdr,</span><br><span class="line">            user_agent_hdr,</span><br><span class="line">            other_hdr,</span><br><span class="line">            endof_hdr);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="对于socket的一些理解"><a href="#对于socket的一些理解" class="headerlink" title="对于socket的一些理解"></a>对于socket的一些理解</h2><blockquote>
+<p>socket就是一个ipaddress:port对</p>
+</blockquote>
+<p>对于内核来说，socket就是通信的一个endpoint<br>而对于应用来说，socket是一个文件描述符(stdin stdout也是文件描述符)，因为在Unix系统里一切外设都是文件，网络也不例外，<strong>客户端和服务器在网络上通信就是通过读写对应的描述符来完成的</strong>。</p>
+<p><img src="/images/CSAPP/socket.JPG" alt="socket"></p>
+<p>看这张图，左边client(一个应用)想要与服务器通信的时候，首先需要通过<code>open_clientfd</code>创建一个socket描述符，然后通过<code>Rio_readinitb(&amp;rio,clientfd)</code> 将这个描述符封装起来, 我去csapp.c中看了下rio_readinitb的源代码:<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">rio_readinitb</span><span class="params">(<span class="keyword">rio_t</span> *rp, <span class="keyword">int</span> fd)</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    rp-&gt;rio_fd = fd;  </span><br><span class="line">    rp-&gt;rio_cnt = <span class="number">0</span>;  </span><br><span class="line">    rp-&gt;rio_bufptr = rp-&gt;rio_buf;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>完成创建和绑定之后便可以实现读写操作</p>
+<ul>
+<li>读: <code>Rio_readlineb(&amp;rio, buf, MAXLINE);</code> </li>
+<li>写: <code>Rio_writen(clientfd, buf, strlen(buf));</code></li>
+</ul>
+<p>注意这里读操作要读<code>&amp;rio</code>，而写操作要写<code>clientfd</code> , <code>rio</code> 本质上还是一个clientfd，唯一的区别就是rio是robust的，所以我们在读的时候采取更robust的方式（防止输入的长度超过了我们buf可以存放的长度）。 服务器端也是一样。</p>
+<h1 id="Level2-Multiple-Concurrent-Requests"><a href="#Level2-Multiple-Concurrent-Requests" class="headerlink" title="Level2: Multiple Concurrent Requests"></a>Level2: Multiple Concurrent Requests</h1><p>第二部分要求我们的proxy服务器支持并行，从CSAPP课本的第12章我们学到了三种实现程序并行的方式</p>
+<ol>
+<li>基于进程: 用之前学到的Fork来实现，每建立一个连接就fork一个子进程来处理这个连接，需要回收僵尸进程已避免内存泄漏（因为proxy是要长期运行的进程)</li>
+<li>基于事件: 维护一个 connection 数组，包含若干 <code>connfd</code>，每个输入请求都被当做事件，然后每次从已有的事件中选取一个进行处理</li>
+<li>基于线程: 线程比进程要轻量级，线程切换的花销比较少，使用<code>pthread.h</code>函数库来实现。</li>
+</ol>
+<p>这里我们选用第三种-基于进程的方法来将我们的代理服务器改造成支持并发的服务器。 其实需要修改的地方不多，在main函数的while循环中，每当我们建立一个新的连接(accpet函数)， 就创建一个新的线程去完成这个doit的任务即可</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> * connfd;</span><br><span class="line"><span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">	clientlen = <span class="keyword">sizeof</span>(clientaddr);</span><br><span class="line">	connfd = Malloc(<span class="keyword">sizeof</span>(<span class="keyword">int</span>));</span><br><span class="line">	*connfd = Accept(listenfd, (SA*) &amp;clientaddr, &amp;clientlen);</span><br><span class="line">	<span class="comment">// 当pthread_create函数返回时候 主线程和新创建的对等线程同时在运行</span></span><br><span class="line">	Pthread_create(&amp;tid, <span class="literal">NULL</span>, thread, connfd);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其中thread是我们的线程例程，它以一个通用指针作为输入，如果想要传递多个参数给线程例程则应该将参数放到一个结构体中，然后传递结构体的指针。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">thread</span><span class="params">(<span class="keyword">void</span> *vargp)</span></span>&#123;</span><br><span class="line">	<span class="keyword">int</span> connfd = *((<span class="keyword">int</span> *) vargp);</span><br><span class="line">	Pthread_detach(pthread_self());</span><br><span class="line">	Free(vargp);</span><br><span class="line">	doit(connfd);</span><br><span class="line">	Close(connfd);</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里<code>pthread_detach()</code>的作用是: 任意时刻，线程都是joinable的或者detached的，二者的区别在于detached thread在执行完毕后会自动释放自己所占用的资源，而joinable thread则会一直占用自己的资源直到有别的线程调用了<code>pthread_join()</code>并以自己的id作为参数了。所以这里为了防止内存泄露，使用了<code>pthread_detach(pthread_self())</code></p>
+<p>这里还存在一个问题是，在main函数中为什么我们不直接将connfd作为参数传入到Pthread_create中呢，而是先动态分配一个地址，再将这个地址作为connfd呢？ </p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> connfd;</span><br><span class="line">connfd = Accept(listenfd, (SA*) &amp;clientaddr, &amp;clientlen);</span><br><span class="line">Pthread_create(&amp;tid, <span class="literal">NULL</span>, thread, &amp;connfd);</span><br></pre></td></tr></table></figure>
+<p>其原因就在于这种写法在<strong>对等线程的赋值语语句 int connfd = <em>((int </em>) vargp)</strong>和<strong>主线程的accept语句</strong>之间引入了竞争。如果复制语句在下一个accept之前完成，那一切都是正常的，如果赋值语句在accept之后完成，则对等线程中的局部变量connfd就得到了下一次连接的描述符值，就有可能出现两个线程在同一个描述符上进行输入输出了。所以我们必须将每个accept返回的已连接描述符分配到这个线程自己动态分配的存储器块中。</p>
+<h1 id="Level3-Caching-Web-Objects"><a href="#Level3-Caching-Web-Objects" class="headerlink" title="Level3: Caching Web Objects"></a>Level3: Caching Web Objects</h1><p>对于缓存，必须是线程安全的，多个线程可以同时访问缓存，而只有一个线程可以写缓存。实际上这是一个读者-写者问题。<br>这里我的实现是读者优先的，只有在没有读者存在的情况下写着才能去写。具体实现:</p>
+<h2 id="Cache定义"><a href="#Cache定义" class="headerlink" title="Cache定义"></a>Cache定义</h2><p>对于缓存的每一项，都有一个wmutex用来保护对buf和url（临界区）的读写，一个rdcntMutex来保护readcnt的读写。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    <span class="keyword">char</span> buf[MAX_OBJECT_SIZE];</span><br><span class="line">    <span class="keyword">char</span> url[MAXLINE]; <span class="comment">// 用url作为key</span></span><br><span class="line">    <span class="keyword">int</span> LRU;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> readCNT;</span><br><span class="line">    <span class="keyword">sem_t</span> wmutex;     <span class="comment">// 保护buf的信号量 初始化为1</span></span><br><span class="line">    <span class="keyword">sem_t</span> rdcntMutex; <span class="comment">// 保护readCNT的信号量 初始化为1   </span></span><br><span class="line">&#125; cache_block;</span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> &#123;</span></span><br><span class="line">    cache_block cacheobjs[MAX_CACHE_BLOCK];</span><br><span class="line">    <span class="keyword">int</span> block_num;</span><br><span class="line">&#125; Cache;</span><br><span class="line">Cache cache;</span><br></pre></td></tr></table></figure></p>
+<p>全局变量<code>cache</code>就是我们在程序中要用的缓存区，它包含了<code>MAX_CACHE_BLOCK</code>项缓存项，这个数是通过<code>MAX_CACHE_SIZE</code>和<code>MAX_OBJECT_SIZE</code>得来的。</p>
+<p>在我们读写cache_block之前，需要对信号量进行加锁操作，具体的实现为:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">readerPrev</span><span class="params">(cache_block *bk)</span> </span>&#123;</span><br><span class="line">    P(&amp;bk-&gt;rdcntMutex);   <span class="comment">/* 修改readCNT前后都需要加锁解锁 以防止出现意外结果 */</span></span><br><span class="line">    bk-&gt;readCNT++;</span><br><span class="line">    <span class="keyword">if</span> (bk-&gt;readCNT == <span class="number">1</span>) <span class="comment">/* First in 如果我是第一个读者，则需要占用wmutex*/</span></span><br><span class="line">        P(&amp;bk-&gt;wmutex);</span><br><span class="line">    V(&amp;bk-&gt;rdcntMutex);	<span class="comment">// 多个读者可以一起读</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">readerAfter</span><span class="params">(cache_block *bk)</span> </span>&#123;</span><br><span class="line">    P(&amp;bk-&gt;rdcntMutex);</span><br><span class="line">    bk-&gt;readCNT--;</span><br><span class="line">    <span class="keyword">if</span> (bk-&gt;readCNT == <span class="number">0</span>) <span class="comment">/*Last out 如果我是最后一个读者 则需释放wmutex*/</span></span><br><span class="line">        V(&amp;bk-&gt;wmutex);</span><br><span class="line">    V(&amp;bk-&gt;rdcntMutex);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">writerPrev</span><span class="params">(cache_block *bk)</span> </span>&#123;</span><br><span class="line">    P(&amp;bk-&gt;wmutex);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">writerAfter</span><span class="params">(cache_block *bk)</span> </span>&#123;</span><br><span class="line">    V(&amp;bk-&gt;wmutex);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="cache-init"><a href="#cache-init" class="headerlink" title="cache_init"></a>cache_init</h2><p>初始化cache，要初试化cache中每一项cache_block的信号量和成员变量。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cache_init</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    cache.block_num = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; MAX_CACHE_BLOCK; i++) &#123;</span><br><span class="line">        Sem_init(&amp;(cache.cacheobjs[i].wmutex), <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">        Sem_init(&amp;(cache.cacheobjs[i].rdcntMutex), <span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">        cache.cacheobjs[i].LRU = <span class="number">0</span>;</span><br><span class="line">        cache.cacheobjs[i].readCNT = <span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="cache-search"><a href="#cache-search" class="headerlink" title="cache_search"></a>cache_search</h2><p>当我们的代理服务器想要从服务器上获取资源的时候，首先会查看自己是否缓存了这个资源，如果能找到则直接返回缓存的内容即可。所以这里需要一个<code>cache_search</code>函数来帮我们寻找某一url对应的资源。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">cache_search</span><span class="params">(<span class="keyword">char</span> *url)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; cache.block_num; i++) &#123;</span><br><span class="line">        readerPrev(&amp;(cache.cacheobjs[i]));</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"\ncache[%d]: %s"</span>, i, cache.cacheobjs[i].url);</span><br><span class="line">        <span class="keyword">if</span> (strcasecmp(url, cache.cacheobjs[i].url) == <span class="number">0</span>) &#123;</span><br><span class="line">            cache.cacheobjs[i].LRU++;</span><br><span class="line">            readerAfter(&amp;(cache.cacheobjs[i])); <span class="comment">// 返回之前必须要先释放啊！</span></span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">        readerAfter(&amp;(cache.cacheobjs[i]));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="cache-insert"><a href="#cache-insert" class="headerlink" title="cache_insert"></a>cache_insert</h2><p>当程序刚开始时，我们需要插入新的缓存项，在修改cache_block前后需要调用<code>writerPrev</code>和<code>writeAfter</code>进行加锁和解锁。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cache_insert</span><span class="params">(<span class="keyword">char</span> *url, <span class="keyword">char</span> *buf)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">strlen</span>(url) &gt; MAXLINE || <span class="built_in">strlen</span>(buf) &gt; MAX_OBJECT_SIZE) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (cache.block_num == MAX_CACHE_BLOCK) &#123;</span><br><span class="line">        cache_conviction(url, buf);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">int</span> i = cache.block_num;</span><br><span class="line">        cache.block_num++;</span><br><span class="line">        writerPrev(&amp;(cache.cacheobjs[i]));</span><br><span class="line">        <span class="built_in">strncpy</span>(cache.cacheobjs[i].url, url, <span class="built_in">strlen</span>(url));</span><br><span class="line">        cache.cacheobjs[i].url[<span class="built_in">strlen</span>(url)] = <span class="string">'\0'</span>;</span><br><span class="line">        <span class="built_in">strncpy</span>(cache.cacheobjs[i].buf, buf, <span class="built_in">strlen</span>(buf));</span><br><span class="line">        cache.cacheobjs[i].buf[<span class="built_in">strlen</span>(buf)] = <span class="string">'\0'</span>;</span><br><span class="line">        cache.cacheobjs[i].LRU = <span class="number">0</span>;</span><br><span class="line">        cache.cacheobjs[i].readCNT = <span class="number">0</span>;</span><br><span class="line">        writerAfter(&amp;(cache.cacheobjs[i]));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="cache-eviction"><a href="#cache-eviction" class="headerlink" title="cache_eviction"></a>cache_eviction</h2><p>当cache中满了又有新的http object需要存入的时候，我们就需要用LRU法则找到一个最远使用过的项目，将其替换为新的http请求的内容。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">cache_eviction</span><span class="params">(<span class="keyword">char</span> *url, <span class="keyword">char</span> *buf)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> index = <span class="number">-1</span>;</span><br><span class="line">    <span class="keyword">int</span> min = <span class="number">9999</span>;</span><br><span class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; cache.block_num; i++) &#123;</span><br><span class="line">        readerPrev(&amp;(cache.cacheobjs[i]));</span><br><span class="line">        <span class="keyword">if</span> (cache.cacheobjs[i].LRU &lt; min) &#123;</span><br><span class="line">            min = cache.cacheobjs[i].LRU;</span><br><span class="line">            index = i;</span><br><span class="line">        &#125;</span><br><span class="line">        readerAfter(&amp;(cache.cacheobjs[i]));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (index &lt; <span class="number">0</span>) index = <span class="number">0</span>;</span><br><span class="line">    <span class="comment">// 更新第i个的内容</span></span><br><span class="line">    writerPrev(&amp;(cache.cacheobjs[i]));</span><br><span class="line">    <span class="built_in">strncpy</span>(cache.cacheobjs[i].url, url, <span class="built_in">strlen</span>(url));</span><br><span class="line">    cache.cacheobjs[i].url[<span class="built_in">strlen</span>(url)] = <span class="string">'\0'</span>;</span><br><span class="line">    <span class="built_in">strncpy</span>(cache.cacheobjs[i].buf, buf, <span class="built_in">strlen</span>(buf));</span><br><span class="line">    cache.cacheobjs[i].buf[<span class="built_in">strlen</span>(buf)] = <span class="string">'\0'</span>;</span><br><span class="line">    cache.cacheobjs[i].LRU = <span class="number">0</span>;</span><br><span class="line">    cache.cacheobjs[i].readCNT = <span class="number">0</span>;</span><br><span class="line">    writerAfter(&amp;(cache.cacheobjs[i]));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里并没有实现真实的LRU，而是通过cache_block中的一个字段LRU来判断的，每当读或者写一个缓存项的时候，都会给它的LRU加一，运行一段时间后LRU最小的一般就是最长时间没访问过的元素（也有可能出现重复，这样就不是严格的LRU了）。</p>
+<h2 id="Using-Cache"><a href="#Using-Cache" class="headerlink" title="Using Cache"></a>Using Cache</h2><p>实现了cache的相关操作之后，我们在level2代码的基础上稍加修改就可以实现功能了。<br>首先在doit函数中，我们加入以下代码，使得在proxy与服务器建立通信之前先检查自己是否有缓存过这个url请求。<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> ind; <span class="comment">// TODO 如果cache中缓存过这个uri，则直接返回结果</span></span><br><span class="line"><span class="keyword">if</span> ((ind = cache_search(uri)) != <span class="number">-1</span>) &#123;</span><br><span class="line">    readerPrev(&amp;(cache.cacheobjs[ind]));</span><br><span class="line">    Rio_writen(connfd, cache.cacheobjs[ind].buf, <span class="built_in">strlen</span>(cache.cacheobjs[ind].buf));</span><br><span class="line">    readerAfter(&amp;(cache.cacheobjs[ind]));</span><br><span class="line">    writerPrev(&amp;(cache.cacheobjs[ind]));</span><br><span class="line">    cache.cacheobjs[ind].LRU++;</span><br><span class="line">    writerAfter(&amp;(cache.cacheobjs[ind]));</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其次，在我们从服务器中获取到响应之后，会调用cache_insert函数来把它更新到cache中</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">size_t</span> n;</span><br><span class="line"><span class="keyword">char</span> whole[MAX_OBJECT_SIZE];</span><br><span class="line"><span class="keyword">int</span> size_whole = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">while</span> ((n = Rio_readlineb(&amp;server_rio, buf, MAXLINE)) != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"proxy received %d bytes,then send\n"</span>, (<span class="keyword">int</span>) n);</span><br><span class="line">    Rio_writen(connfd, buf, n);</span><br><span class="line">    size_whole += n;</span><br><span class="line">    <span class="keyword">if</span> (size_whole &lt; MAX_OBJECT_SIZE)</span><br><span class="line">        <span class="built_in">strcat</span>(whole, buf);</span><br><span class="line">&#125;</span><br><span class="line">cache_insert(uri_store, whole); <span class="comment">// 将结果插入到cache中</span></span><br><span class="line">Close(serverfd);</span><br></pre></td></tr></table></figure>
+<h1 id="More"><a href="#More" class="headerlink" title="More"></a>More</h1><h2 id="signal-handlling"><a href="#signal-handlling" class="headerlink" title="signal handlling"></a>signal handlling</h2><p>除此之外实验指导书中还有一些别的要求，比如为了proxy的健壮性，需要我们忽视一些信号。 比如当我们向一个已经关闭的socket发送内容，就会得到SIGPIPE的信号，对于这个信号默认的处理方法是终止这个进程，所以我们需要通过以下语句来忽视这个信号<br><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">signa(SIGPIPE, SIG_IGN);</span><br></pre></td></tr></table></figure></p>
+<h2 id="reader-writer-lock"><a href="#reader-writer-lock" class="headerlink" title="reader/writer lock"></a>reader/writer lock</h2><p>对于读者-写者问题的实现其实在<code>pthread.h</code>中是有一些函数可以使用的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#include &quot;pthread.h&quot;</span><br><span class="line">int pthread_rwlock_destroy(pthread_rwlock_t *rwlock);</span><br><span class="line">int pthread_rwlock_init(pthread_rwlock_t *restrict rwlock,const pthread_rwlockattr_t *restrict attr);</span><br><span class="line"></span><br><span class="line">/* Apply a read lock */</span><br><span class="line">int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock);</span><br><span class="line">int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock);</span><br><span class="line"></span><br><span class="line">/* Apply a write lock */</span><br><span class="line">int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock);</span><br><span class="line">int pthread_rwlock_trywrlock(pthread_rwlock_t *rwlock);</span><br><span class="line"></span><br><span class="line">/* releases a lock held on the read-write lock object referenced by rwlock. */</span><br><span class="line">int pthread_rwlock_unlock(pthread_rwlock_t *rwlock);</span><br></pre></td></tr></table></figure>
+<p>这里的<code>wrlock</code>和<code>trywrlock</code>实际上是非常有用的一对组合。当我们从缓存中读取内容时，需要更新时间戳（在上面的代码中就是LRU)，如果我们使用trywrlock 来保证我们修改时间戳的过程，那这个函数不会阻塞并等着共享资源的释放，而是会直接返回。 因为我们并没有要求严格的LRU规则，所以我们完全跳过这次的更新直接返回。</p>
+<p>具体的文档可以看<a href="https://docs.oracle.com/cd/E19455-01/806-5257/6je9h032u/index.html" target="_blank" rel="noopener">这里</a></p>
+<h1 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h1><ol>
+<li><a href="http://zablog.me/2015/12/08/ICS_Socket/" target="_blank" rel="noopener">Socket的一些Guide</a></li>
+<li><a href="https://github.com/Ethan-Yan27/CSAPP-Labs/blob/master/yzf-proxylab-handout-3e/proxy%20(Part%201" target="_blank" rel="noopener">Ethan-Yan27</a>.c) </li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CSAPP/" rel="tag"><i class="fa fa-tag"></i> CSAPP</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/23/Algorithms/九章-动态规划/" rel="next" title="九章-动态规划">
+                <i class="fa fa-chevron-left"></i> 九章-动态规划
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/19/CSAPP/CSAPP系列总结/" rel="prev" title="CSAPP系列总结">
+                CSAPP系列总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/mine.jpg"
+                alt="XuyangBai" />
+            
+              <p class="site-author-name" itemprop="name">XuyangBai</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">37</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/XuyangBai" target="_blank" title="Github">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Github</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="https://www.linkedin.com/in/%E6%97%AD%E9%98%B3-%E7%99%BD-419369140/" target="_blank" title="Linkedin">
+                    
+                      <i class="fa fa-fw fa-globe"></i>Linkedin</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Level1-Sequential-Web-Proxy"><span class="nav-number">1.</span> <span class="nav-text">Level1: Sequential Web Proxy</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#main"><span class="nav-number">1.1.</span> <span class="nav-text">main</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#doit"><span class="nav-number">1.2.</span> <span class="nav-text">doit</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#parse-uri"><span class="nav-number">1.3.</span> <span class="nav-text">parse_uri</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#build-http-header"><span class="nav-number">1.4.</span> <span class="nav-text">build_http_header</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#对于socket的一些理解"><span class="nav-number">1.5.</span> <span class="nav-text">对于socket的一些理解</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level2-Multiple-Concurrent-Requests"><span class="nav-number">2.</span> <span class="nav-text">Level2: Multiple Concurrent Requests</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Level3-Caching-Web-Objects"><span class="nav-number">3.</span> <span class="nav-text">Level3: Caching Web Objects</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cache定义"><span class="nav-number">3.1.</span> <span class="nav-text">Cache定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-init"><span class="nav-number">3.2.</span> <span class="nav-text">cache_init</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-search"><span class="nav-number">3.3.</span> <span class="nav-text">cache_search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-insert"><span class="nav-number">3.4.</span> <span class="nav-text">cache_insert</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#cache-eviction"><span class="nav-number">3.5.</span> <span class="nav-text">cache_eviction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-Cache"><span class="nav-number">3.6.</span> <span class="nav-text">Using Cache</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#More"><span class="nav-number">4.</span> <span class="nav-text">More</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#signal-handlling"><span class="nav-number">4.1.</span> <span class="nav-text">signal handlling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#reader-writer-lock"><span class="nav-number">4.2.</span> <span class="nav-text">reader/writer lock</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference"><span class="nav-number">5.</span> <span class="nav-text">Reference</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">XuyangBai</span>
+
+  
+</div>
+
+<div class="powered-by">
+<i class="fa fa-user-md"></i><span id="busuanzi_container_site_uv">
+  本站访客数:<span id="busuanzi_value_site_uv"></span>
+</span>
+<span class="post-meta-divider">|</span>
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.3</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("uFLr00lMNa5H9BGnQpg2Oq9p-gzGzoHsz", "dwYpENeLoJzOf7Xx4pMlY5BE");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+  <script type="text/javascript" src="/js/src/love.js"></script>
+</body>
+</html>
